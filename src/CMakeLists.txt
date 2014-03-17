@@ -1,0 +1,34 @@
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+set(FPFL_sources
+    frame.cpp
+    main.cpp
+    hoverbutton.cpp
+    sidewidget.cpp
+    sidewidgetpagelabel.cpp
+    wizard.cpp
+    wizardapplet.cpp
+    wizardpage.cpp
+    wizardview.cpp
+)
+
+set(FPFL_pages
+    pages/welcomepage.cpp
+    pages/languagepage.cpp
+    pages/regionpage.cpp
+    pages/colorthemepage.cpp
+)
+
+kde4_add_executable(fedora-plasma-first-login
+                    ${FPFL_sources}
+                    ${FPFL_pages}
+)
+
+target_link_libraries(fedora-plasma-first-login
+                    ${QT_QTCORE_LIBRARY}
+                    ${QT_QTGUI_LIBRARY}
+                    ${KDE4_KDECORE_LIBRARY}
+                    ${KDE4_PLASMA_LIBRARY}
+                    ${PACKAGEKIT_QT2_LIBRARIES}
+)
+
