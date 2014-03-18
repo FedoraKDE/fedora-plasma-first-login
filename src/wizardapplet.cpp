@@ -128,7 +128,9 @@ void WizardApplet::slotNextPage()
 {
     WizardPage * currentPage = qobject_cast<WizardPage *>(mWizard.currentPage());
     if (currentPage) {
-        currentPage->commitChanges();
+        if (currentPage->isComplete()) {
+            currentPage->commitChanges();
+        }
         mWizard.next();
     }
 }
