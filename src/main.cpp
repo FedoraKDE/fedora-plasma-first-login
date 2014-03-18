@@ -35,9 +35,9 @@ int main(int argc, char **argv)
                      QByteArray(FPFL_VERSION),
                      ki18n("First Login wizard that will guide user through initial personalization of his profile"),
                      KAboutData::License_GPL_V2,
-                     KLocalizedString(), // Copyright
+                     ki18n("Copyright (c) 2014 Fedora Plasma hackers"), // Copyright
                      KLocalizedString(), // Other text
-                     "http://www.fedoraproject.org", // TODO: Fedora Plasma product homepage?
+                     "http://fedoraproject.org/wiki/Fedora_Plasma_Product",
                      QByteArray()); // TODO: mail for submitting bugs to RHBZ
     KCmdLineArgs::init(argc, argv, &about);
 
