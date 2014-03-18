@@ -19,7 +19,8 @@
 
 #include "welcomepage.h"
 
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
+#include <KGlobalSettings>
 
 #include <Plasma/Label>
 #include <QtGui/QLabel>
@@ -44,15 +45,18 @@ void WelcomePage::initializePage()
     }
 
     mLabel = new Plasma::Label;
-    mLabel->setText(i18n("<p>Welcome to Fedora Plasma!</p>"
+    QFont font = KGlobalSettings::generalFont();
+    font.setPointSize(16);
+    mLabel->setFont(font);
+    mLabel->setText(i18n("<h1>Welcome to Fedora Plasma!</h1>"
                        "<p>This wizard will guide you through several steps to personalize your workspace.</p>"
-                       "<p>You can skip any step and configure it later from System Settings. Alternatively, you can start this wizard again"
+                       "<p>You can skip any step and configure it later from System Settings. Alternatively, you can start this wizard again "
                        "from Application Launcher.</p>"));
     mLabel->nativeWidget()->setWordWrap(true);
 
     QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
     shadow->setBlurRadius(5);
-    shadow->setOffset(3);
+    shadow->setOffset(1);
     shadow->setColor(Qt::black);
     mLabel->setGraphicsEffect(shadow);
 }
