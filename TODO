@@ -1,0 +1,5 @@
+- polish UI
+- pre-load pages (switching tabs is awfuly slow atm)
+- look into the 'QPainter' warnings in console
+- test look&feel properly with default Plasma configuration
+- add more pages
