@@ -22,6 +22,10 @@
 
 #include "../wizardpage.h"
 
+namespace Plasma {
+class TreeView;
+}
+
 class QGraphicsWidget;
 class RegionPage : public WizardPage
 {
@@ -30,10 +34,13 @@ class RegionPage : public WizardPage
     RegionPage(QWidget* parent);
     ~RegionPage();
 
+    void initializePage();
+    void commitChanges();
     QGraphicsLayoutItem* rootWidget() const;
 
   private:
-    QGraphicsWidget* mRoot;
+    QGraphicsWidget* mWidget;
+    Plasma::TreeView* mRegionsWidget;
 };
 
 #endif // REGIONPAGE_H

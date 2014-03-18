@@ -35,7 +35,6 @@ class LanguagePage : public WizardPage
     LanguagePage(QWidget* parent);
     ~LanguagePage();
 
-    bool shouldSkip() const;
     void initializePage();
     void commitChanges();
 

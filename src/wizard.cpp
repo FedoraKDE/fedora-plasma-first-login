@@ -75,9 +75,8 @@ void Wizard::onCurrentIdChanged(int id)
         if (!previousPage) {
             return;
         }
-
-        previousPage->commitChanges();
     }
 
     mCurrentPageId = id;
+    page(mCurrentPageId)->initializePage();
 }

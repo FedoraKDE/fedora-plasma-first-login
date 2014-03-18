@@ -43,6 +43,7 @@ class WizardApplet : public Plasma::Applet
 
   private Q_SLOTS:
     void wizardPageChanged(int id);
+    void slotNextPage();
 
   private:
     Wizard mWizard;

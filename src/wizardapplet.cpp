@@ -101,7 +101,7 @@ void WizardApplet::init()
         buttonsLayout->addItem(mNextButton);
         buttonsLayout->setAlignment(mNextButton, Qt::AlignVCenter);
         connect(mNextButton, SIGNAL(clicked()),
-                &mWizard, SLOT(next()));
+                this, SLOT(slotNextPage()));
     }
 
     mWizard.init();
@@ -113,7 +113,6 @@ void WizardApplet::wizardPageChanged(int id)
     mPrevButton->setEnabled(id != mWizard.startId());
 
     WizardPage* page = qobject_cast<WizardPage*>(mWizard.page(id));
-    page->initializePage();
 
     if (mContentLayout->count() > 1) {
         dynamic_cast<QGraphicsWidget*>(mContentLayout->itemAt(1))->hide();
@@ -123,4 +122,13 @@ void WizardApplet::wizardPageChanged(int id)
     mContentLayout->addItem(page->rootWidget());
     dynamic_cast<QGraphicsWidget*>(page->rootWidget())->show();
     mContentLayout->setStretchFactor(mContentLayout->itemAt(1), 100);
+}
+
+void WizardApplet::slotNextPage()
+{
+    WizardPage * currentPage = qobject_cast<WizardPage *>(mWizard.currentPage());
+    if (currentPage) {
+        currentPage->commitChanges();
+        mWizard.next();
+    }
 }

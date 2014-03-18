@@ -19,7 +19,6 @@
 
 #include "languagepage.h"
 
-#include <KLocalizedString>
 #include <KLocale>
 #include <KGlobal>
 #include <KStandardDirs>
@@ -43,24 +42,6 @@ LanguagePage::LanguagePage(QWidget* parent)
     , mWidget(0)
 {
     setTitle(i18nc("@title:tab", "Language"));
-}
-
-LanguagePage::~LanguagePage()
-{
-    delete mWidget;
-}
-
-
-bool LanguagePage::shouldSkip() const
-{
-    return KGlobal::locale()->installedLanguages().size() < 2;
-}
-
-void LanguagePage::initializePage()
-{
-    if (mWidget) {
-        return;
-    }
 
     mWidget = new QGraphicsWidget;
     QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Vertical);
@@ -69,7 +50,7 @@ void LanguagePage::initializePage()
 
     Plasma::Label* label = new Plasma::Label(mWidget);
     label->setText(i18n("<p>Select your language below. This will switch language of all KDE applications.</p>"
-                        "<p>If your langauge is not listed below, click on 'Install more languages' button below.</p>"));
+                        "<p>If your language is not listed below, click on 'Install more languages' button below.</p>"));
     layout->addItem(label);
 
     mLangsWidget = new Plasma::TreeView(mWidget);
@@ -77,21 +58,28 @@ void LanguagePage::initializePage()
     mLangsWidget->nativeWidget()->setRootIsDecorated(false);
     layout->addItem(mLangsWidget);
 
-    QStandardItemModel* model = new QStandardItemModel(mWidget);
-    Q_FOREACH (const QString& language, KGlobal::locale()->installedLanguages()) {
-        const QString flag = KGlobal::dirs()->findResource("locale", QString::fromLatin1("l10n/%1/flag.png").arg(language.right(2).toLower()));
-        QStandardItem* item = new QStandardItem(QIcon(flag), KGlobal::locale()->languageCodeToName(language));
-        item->setData(language);
-        model->appendRow(item);
-    }
-    mLangsWidget->setModel(model);
-
     Plasma::PushButton* button = new Plasma::PushButton(mWidget);
     button->setText(i18nc("@action:button", "Install more languages"));
     button->setIcon(KIcon(QLatin1String("run-build-install")));
     connect(button, SIGNAL(clicked()),
             this, SLOT(installMoreLanguages()));
     layout->addItem(button);
+}
+
+LanguagePage::~LanguagePage()
+{
+    delete mWidget;
+}
+
+void LanguagePage::initializePage()
+{
+    QStandardItemModel* model = new QStandardItemModel(mWidget);
+    Q_FOREACH (const QString& language, KGlobal::locale()->installedLanguages()) {
+        QStandardItem* item = new QStandardItem(KGlobal::locale()->languageCodeToName(language));
+        item->setData(language);
+        model->appendRow(item);
+    }
+    mLangsWidget->setModel(model);
 }
 
 void LanguagePage::commitChanges()
@@ -102,7 +90,8 @@ void LanguagePage::commitChanges()
     }
 
     const QString lang = currentIndex.data(Qt::UserRole + 1).toString();
-    KGlobal::locale()->setLanguage(lang, 0);
+    qDebug() << "setting language to" << lang;
+    KGlobal::locale()->setLanguage(lang, 0); // FIXME actually apply the language globally at some point
 }
 
 QGraphicsLayoutItem* LanguagePage::rootWidget() const
@@ -110,8 +99,7 @@ QGraphicsLayoutItem* LanguagePage::rootWidget() const
     return mWidget;
 }
 
-
 void LanguagePage::installMoreLanguages()
 {
+    // TODO call initializePage() after the additional languages have been installed
 }
-
