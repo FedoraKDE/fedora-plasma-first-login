@@ -1,7 +1,7 @@
 Fedora Plasma first login wizard
 ================================
 
-This wizard well help a new Fedora Plasma user guide thru some basic setup steps:
+This wizard will help a new Fedora Plasma user guide thru some basic setup steps:
 - language
 - region
 - timezone
