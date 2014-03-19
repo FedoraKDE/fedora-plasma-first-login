@@ -38,6 +38,9 @@ class RegionPage : public WizardPage
     void commitChanges();
     QGraphicsLayoutItem* rootWidget() const;
 
+  private Q_SLOTS:
+    void slotDateTimeSettings();
+
   private:
     QGraphicsWidget* mWidget;
     Plasma::TreeView* mRegionsWidget;

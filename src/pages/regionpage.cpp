@@ -26,6 +26,7 @@
 #include <QStringListModel>
 #include <QStandardItemModel>
 #include <QTreeView>
+#include <QProcess>
 
 #include <KGlobal>
 #include <KLocale>
@@ -40,7 +41,7 @@ RegionPage::RegionPage(QWidget* parent)
     , mWidget(0)
 {
     setTitle(i18nc("@title:tab", "Region"));
-    qDebug() << "User KLocale language is" << KGlobal::locale()->language();
+    //qDebug() << "User KLocale language is" << KGlobal::locale()->language();
 
     mWidget = new QGraphicsWidget;
     QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Vertical);
@@ -55,6 +56,13 @@ RegionPage::RegionPage(QWidget* parent)
     mRegionsWidget->nativeWidget()->setHeaderHidden(true);
     mRegionsWidget->nativeWidget()->setRootIsDecorated(false);
     layout->addItem(mRegionsWidget);
+
+    Plasma::PushButton* button = new Plasma::PushButton(mWidget);
+    button->setText(i18nc("@action:button", "Date && time settings..."));
+    button->setIcon(KIcon(QLatin1String("preferences-system-time")));
+    connect(button, SIGNAL(clicked()),
+            this, SLOT(slotDateTimeSettings()));
+    layout->addItem(button);
 }
 
 RegionPage::~RegionPage()
@@ -65,15 +73,15 @@ RegionPage::~RegionPage()
 void RegionPage::initializePage()
 {
     const QString userLang = KGlobal::locale()->language();
-    qDebug() << "User KLocale language is" << userLang;
+    //qDebug() << "User KLocale language is" << userLang;
     QLocale userLocale = QLocale(userLang);
-    qDebug() << "User QLocale language is" << userLocale.nativeLanguageName();
+    //qDebug() << "User QLocale language is" << userLocale.nativeLanguageName();
 
     QList<QLocale> matchingRegions = QLocale::matchingLocales(userLocale.language(), QLocale::AnyScript, QLocale::AnyCountry);
 
     QStandardItemModel* model = new QStandardItemModel(mWidget);
     Q_FOREACH (const QLocale & loc, matchingRegions) {
-        const QString countryCode = loc.name().section(QLatin1Char('_'), 1).toLower();
+        const QString countryCode = loc.name().section(QLatin1Char('_'), 1).toLower(); // cs_CZ
         qDebug() << "adding matching country" << countryCode;
         const QString flag = KGlobal::dirs()->findResource("locale", QString::fromLatin1("l10n/%1/flag.png").arg(countryCode));
         QStandardItem* item = new QStandardItem(QIcon(flag), loc.nativeCountryName());
@@ -81,6 +89,7 @@ void RegionPage::initializePage()
         model->appendRow(item);
     }
     mRegionsWidget->setModel(model);
+    mRegionsWidget->nativeWidget()->sortByColumn(0, Qt::AscendingOrder);
 }
 
 void RegionPage::commitChanges()
@@ -91,4 +100,9 @@ void RegionPage::commitChanges()
 QGraphicsLayoutItem* RegionPage::rootWidget() const
 {
     return mWidget;
+}
+
+void RegionPage::slotDateTimeSettings()
+{
+    QProcess::startDetached(QLatin1String("kcmshell4 clock"));
 }

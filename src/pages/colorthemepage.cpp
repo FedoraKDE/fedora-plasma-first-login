@@ -129,7 +129,6 @@ void ColorThemePage::onMouseEnteredButton()
 
 void ColorThemePage::updatePixmap()
 {
-    kDebug();
     if (!sender()) {
         return;
     }
@@ -141,7 +140,7 @@ void ColorThemePage::updatePixmap()
 
 void ColorThemePage::onMouseLeftButton()
 {
-   QPixmap currentPixmap, targetPixmap;
+    QPixmap currentPixmap, targetPixmap;
     if (sender() == mLightButton && mDarkButton->isChecked()) {
         targetPixmap = mDark;
         currentPixmap = mLight;
