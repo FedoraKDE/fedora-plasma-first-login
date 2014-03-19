@@ -75,7 +75,11 @@ void LanguagePage::initializePage()
 {
     QStandardItemModel* model = new QStandardItemModel(mWidget);
     Q_FOREACH (const QString& language, KGlobal::locale()->installedLanguages()) {
-        QStandardItem* item = new QStandardItem(KGlobal::locale()->languageCodeToName(language));
+        QLocale loc(language);
+        QString langName = loc.nativeLanguageName();
+        if (langName.isEmpty())
+            langName = KGlobal::locale()->languageCodeToName(language);
+        QStandardItem* item = new QStandardItem(langName);
         item->setData(language);
         model->appendRow(item);
     }

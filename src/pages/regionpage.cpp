@@ -84,7 +84,10 @@ void RegionPage::initializePage()
         const QString countryCode = loc.name().section(QLatin1Char('_'), 1).toLower(); // cs_CZ
         qDebug() << "adding matching country" << countryCode;
         const QString flag = KGlobal::dirs()->findResource("locale", QString::fromLatin1("l10n/%1/flag.png").arg(countryCode));
-        QStandardItem* item = new QStandardItem(QIcon(flag), loc.nativeCountryName());
+        QString countryName = loc.nativeCountryName();
+        if (countryName.isEmpty())
+            countryName = KGlobal::locale()->countryCodeToName(countryCode);
+        QStandardItem* item = new QStandardItem(QIcon(flag), countryName);
         item->setData(countryCode);
         model->appendRow(item);
     }
