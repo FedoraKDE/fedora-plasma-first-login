@@ -32,3 +32,4 @@ target_link_libraries(fedora-plasma-first-login
                     ${PACKAGEKIT_QT2_LIBRARIES}
 )
 
+install(TARGETS fedora-plasma-first-login ${INSTALL_TARGETS_DEFAULT_ARGS})
