@@ -27,6 +27,7 @@
 #include <QStringListModel>
 #include <QStandardItemModel>
 #include <QTreeView>
+#include <QProcess>
 
 #include <Plasma/Label>
 #include <Plasma/TreeView>
@@ -45,7 +46,7 @@ LanguagePage::LanguagePage(QWidget* parent)
 
     mWidget = new QGraphicsWidget;
     QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Vertical);
-    layout->setSpacing(40);
+    layout->setSpacing(10);
     mWidget->setLayout(layout);
 
     Plasma::Label* label = new Plasma::Label(mWidget);
@@ -59,11 +60,18 @@ LanguagePage::LanguagePage(QWidget* parent)
     layout->addItem(mLangsWidget);
 
     Plasma::PushButton* button = new Plasma::PushButton(mWidget);
-    button->setText(i18nc("@action:button", "Install more languages"));
+    button->setText(i18nc("@action:button", "Install more &languages..."));
     button->setIcon(KIcon(QLatin1String("run-build-install")));
     connect(button, SIGNAL(clicked()),
             this, SLOT(installMoreLanguages()));
     layout->addItem(button);
+
+    Plasma::PushButton* kbdBtn = new Plasma::PushButton(mWidget);
+    kbdBtn->setText(i18nc("@action:button", "Setup &keyboard..."));
+    kbdBtn->setIcon(KIcon(QLatin1String("preferences-desktop-keyboard")));
+    connect(kbdBtn, SIGNAL(clicked()),
+            this, SLOT(setupKeyboard()));
+    layout->addItem(kbdBtn);
 }
 
 LanguagePage::~LanguagePage()
@@ -107,4 +115,9 @@ QGraphicsLayoutItem* LanguagePage::rootWidget() const
 void LanguagePage::installMoreLanguages()
 {
     // TODO call initializePage() after the additional languages have been installed
+}
+
+void LanguagePage::setupKeyboard()
+{
+    QProcess::startDetached(QLatin1String("kcmshell4 kcm_keyboard"));
 }

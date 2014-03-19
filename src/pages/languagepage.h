@@ -42,6 +42,7 @@ class LanguagePage : public WizardPage
 
   private Q_SLOTS:
     void installMoreLanguages();
+    void setupKeyboard();
 
   private:
     QGraphicsWidget* mWidget;

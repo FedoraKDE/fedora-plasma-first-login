@@ -86,7 +86,7 @@ void WizardApplet::init()
 
 
         mPrevButton = new Plasma::PushButton(this);
-        mPrevButton ->setText(i18n("Previous"));
+        mPrevButton ->setText(i18n("&Previous"));
         mPrevButton ->setMaximumHeight(30);
         buttonsLayout->addItem(mPrevButton );
         buttonsLayout->setAlignment(mPrevButton , Qt::AlignVCenter);
@@ -96,7 +96,7 @@ void WizardApplet::init()
         buttonsLayout->addStretch(1);
 
         mNextButton = new Plasma::PushButton(this);
-        mNextButton->setText(i18n("Next"));
+        mNextButton->setText(i18n("&Next"));
         mNextButton->setMaximumHeight(30);
         buttonsLayout->addItem(mNextButton);
         buttonsLayout->setAlignment(mNextButton, Qt::AlignVCenter);

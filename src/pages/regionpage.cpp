@@ -45,7 +45,7 @@ RegionPage::RegionPage(QWidget* parent)
 
     mWidget = new QGraphicsWidget;
     QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Vertical);
-    layout->setSpacing(40);
+    layout->setSpacing(10);
     mWidget->setLayout(layout);
 
     Plasma::Label* label = new Plasma::Label(mWidget);
@@ -57,12 +57,12 @@ RegionPage::RegionPage(QWidget* parent)
     mRegionsWidget->nativeWidget()->setRootIsDecorated(false);
     layout->addItem(mRegionsWidget);
 
-    Plasma::PushButton* button = new Plasma::PushButton(mWidget);
-    button->setText(i18nc("@action:button", "Date && time settings..."));
-    button->setIcon(KIcon(QLatin1String("preferences-system-time")));
-    connect(button, SIGNAL(clicked()),
+    Plasma::PushButton* langBtn = new Plasma::PushButton(mWidget);
+    langBtn->setText(i18nc("@action:button", "&Date && time settings..."));
+    langBtn->setIcon(KIcon(QLatin1String("preferences-system-time")));
+    connect(langBtn, SIGNAL(clicked()),
             this, SLOT(slotDateTimeSettings()));
-    layout->addItem(button);
+    layout->addItem(langBtn);
 }
 
 RegionPage::~RegionPage()
