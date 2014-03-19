@@ -80,6 +80,7 @@ void LanguagePage::initializePage()
         model->appendRow(item);
     }
     mLangsWidget->setModel(model);
+    mLangsWidget->nativeWidget()->sortByColumn(0, Qt::AscendingOrder);
 }
 
 void LanguagePage::commitChanges()
