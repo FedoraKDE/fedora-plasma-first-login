@@ -24,7 +24,6 @@
 #include <KStandardDirs>
 
 #include <QGraphicsLinearLayout>
-#include <QStringListModel>
 #include <QStandardItemModel>
 #include <QTreeView>
 #include <QProcess>

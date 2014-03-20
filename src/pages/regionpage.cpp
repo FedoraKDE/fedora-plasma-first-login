@@ -97,7 +97,14 @@ void RegionPage::initializePage()
 
 void RegionPage::commitChanges()
 {
-    // TODO
+    const QModelIndex currentIndex = mRegionsWidget->nativeWidget()->currentIndex();
+    if (!currentIndex.isValid()) {
+        return;
+    }
+
+    const QString country = currentIndex.data(Qt::UserRole + 1).toString();
+    qDebug() << "setting country to" << country;
+    KGlobal::locale()->setCountry(country, 0); // FIXME actually apply the country globally at some point
 }
 
 QGraphicsLayoutItem* RegionPage::rootWidget() const
