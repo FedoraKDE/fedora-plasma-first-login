@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2014  Daniel Vrátil <dvratil@redhat.com>
+ * Copyright (C) 2014  Lukáš Tinkl <ltinkl@redhat.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +34,7 @@
 #include <QResizeEvent>
 #include <QButtonGroup>
 #include <QGraphicsLinearLayout>
+#include <QDebug>
 
 ColorThemePage::ColorThemePage(QWidget* parent)
     : WizardPage(parent)
@@ -40,21 +42,7 @@ ColorThemePage::ColorThemePage(QWidget* parent)
     , mAnimation(Plasma::Animator::create(Plasma::Animator::PixmapTransitionAnimation, this))
 {
     setTitle(i18nc("@title:tab", "Color Theme"));
-
-    connect(mAnimation, SIGNAL(currentLoopChanged(int)),
-            this, SLOT(updatePixmap()));
-}
-
-ColorThemePage::~ColorThemePage()
-{
-    delete mRootWidget;
-}
-
-void ColorThemePage::initializePage()
-{
-    if (mRootWidget) {
-        return;
-    }
+    mAnimation->setLoopCount(-1);
 
     mLight = QPixmap(KGlobal::dirs()->findResource("data", QLatin1String("fedora-plasma-first-login/theme-light.png")));
     mDark =  QPixmap(KGlobal::dirs()->findResource("data", QLatin1String("fedora-plasma-first-login/theme-dark.png")));
@@ -63,7 +51,6 @@ void ColorThemePage::initializePage()
     QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Vertical);
     mRootWidget->setLayout(layout);
 
-    QImage img = mLight.toImage();
     mImageView = new Plasma::Label(mRootWidget);
     mImageView->nativeWidget()->setPixmap(mLight.scaled(500, 312 , Qt::KeepAspectRatio, Qt::SmoothTransformation));
     //mImageView->setScaledContents(true);
@@ -95,6 +82,18 @@ void ColorThemePage::initializePage()
     buttonsLayout->addItem(mDarkButton);
     buttonGroup->addButton(mDarkButton->nativeWidget());
     layout->addItem(buttonsLayout);
+
+    connect(mAnimation, SIGNAL(currentLoopChanged(int)),
+            this, SLOT(updatePixmap()));
+}
+
+ColorThemePage::~ColorThemePage()
+{
+    delete mRootWidget;
+}
+
+void ColorThemePage::initializePage()
+{
 }
 
 QGraphicsLayoutItem* ColorThemePage::rootWidget() const
@@ -102,8 +101,15 @@ QGraphicsLayoutItem* ColorThemePage::rootWidget() const
     return mRootWidget;
 }
 
+void ColorThemePage::commitChanges()
+{
+    mAnimation->stop();
+    // TODO save the changes
+}
+
 void ColorThemePage::resizeEvent(QResizeEvent* event)
 {
+    qDebug() << "resize event";
     QWidget::resizeEvent(event);
 
     mImageView->nativeWidget()->setPixmap(mLight.scaled(event->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
@@ -111,6 +117,8 @@ void ColorThemePage::resizeEvent(QResizeEvent* event)
 
 void ColorThemePage::onMouseEnteredButton()
 {
+    qDebug() << "mouse entered";
+
     QPixmap currentPixmap, targetPixmap;
     if (sender() == mLightButton && mDarkButton->isChecked()) {
         targetPixmap = mLight;
@@ -122,24 +130,29 @@ void ColorThemePage::onMouseEnteredButton()
         return;
     }
 
-    mAnimation->setProperty("startPixmap", QVariant::fromValue(currentPixmap));
-    mAnimation->setProperty("targetPixmap", QVariant::fromValue(targetPixmap));
+    mAnimation->setProperty("startPixmap", currentPixmap);
+    mAnimation->setProperty("targetPixmap", targetPixmap);
     mAnimation->start();
 }
 
 void ColorThemePage::updatePixmap()
 {
+    qDebug() << "update pixmap";
+
     if (!sender()) {
         return;
     }
 
     const QPixmap pixmap = sender()->property("currentPixmap").value<QPixmap>();
-    mImageView->nativeWidget()->setPixmap(pixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    mImageView->nativeWidget()->setPixmap(pixmap.scaled(mImageView->nativeWidget()->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    mAnimation->pause();
 }
 
 
 void ColorThemePage::onMouseLeftButton()
 {
+    qDebug() << "mouse left";
+
     QPixmap currentPixmap, targetPixmap;
     if (sender() == mLightButton && mDarkButton->isChecked()) {
         targetPixmap = mDark;
@@ -151,7 +164,7 @@ void ColorThemePage::onMouseLeftButton()
         return;
     }
 
-    mAnimation->setProperty("startPixmap", QVariant::fromValue(currentPixmap));
-    mAnimation->setProperty("targetPixmap", QVariant::fromValue(targetPixmap));
+    mAnimation->setProperty("startPixmap", currentPixmap);
+    mAnimation->setProperty("targetPixmap", targetPixmap);
     mAnimation->start();
 }

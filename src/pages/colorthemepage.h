@@ -41,6 +41,8 @@ class ColorThemePage : public WizardPage
     void initializePage();
     QGraphicsLayoutItem* rootWidget() const;
 
+    void commitChanges();
+
   protected:
     void resizeEvent(QResizeEvent* event);
 
