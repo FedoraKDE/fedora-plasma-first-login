@@ -49,7 +49,13 @@ ColorThemePage::ColorThemePage(QWidget* parent)
 
     mRootWidget = new QGraphicsWidget;
     QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->setSpacing(10);
     mRootWidget->setLayout(layout);
+
+    Plasma::Label* label = new Plasma::Label(mRootWidget);
+    label->setText(i18n("<p>Select your prefered Plasma and color scheme using the buttons below.</p>"
+                        "<p>The preview image will adjust accordingly as you hover over those buttons.</p>"));
+    layout->addItem(label);
 
     mImageView = new Plasma::Label(mRootWidget);
     mImageView->nativeWidget()->setPixmap(mLight.scaled(500, 312 , Qt::KeepAspectRatio, Qt::SmoothTransformation));
