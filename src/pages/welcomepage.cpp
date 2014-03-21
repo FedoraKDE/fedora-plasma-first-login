@@ -53,12 +53,6 @@ void WelcomePage::initializePage()
                        "<p>You can skip any step and configure it later from System Settings. Alternatively, you can start this wizard again "
                        "from Application Launcher.</p>"));
     mLabel->nativeWidget()->setWordWrap(true);
-
-    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
-    shadow->setBlurRadius(5);
-    shadow->setOffset(1);
-    shadow->setColor(Qt::black);
-    mLabel->setGraphicsEffect(shadow);
 }
 
 QGraphicsLayoutItem* WelcomePage::rootWidget() const
