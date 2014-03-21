@@ -34,7 +34,7 @@ class Animation;
 class ColorThemePage : public Page
 {
     Q_OBJECT
-    Q_CLASSINFO("Title", I18N("Color Theme"))
+    Q_CLASSINFO("Title", I18N_NOOP("Color Theme"))
 
   public:
     ColorThemePage();

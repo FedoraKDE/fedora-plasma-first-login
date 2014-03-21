@@ -29,7 +29,7 @@ class Label;
 class WelcomePage : public Page
 {
     Q_OBJECT
-    Q_CLASSINFO("Title", I18N("Welcome"))
+    Q_CLASSINFO("Title", I18N_NOOP("Welcome"))
 
   public:
     WelcomePage();

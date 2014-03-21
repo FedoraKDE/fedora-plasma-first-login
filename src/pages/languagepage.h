@@ -29,7 +29,7 @@ class TreeView;
 class LanguagePage : public Page
 {
     Q_OBJECT
-    Q_CLASSINFO("Title", I18N("Language"))
+    Q_CLASSINFO("Title", I18N_NOOP("Language"))
 
   public:
     LanguagePage();

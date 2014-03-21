@@ -21,8 +21,6 @@
 
 #include <QMetaClassInfo>
 
-#include <KLocalizedString>
-
 Page::Page()
     : QGraphicsWidget()
 {

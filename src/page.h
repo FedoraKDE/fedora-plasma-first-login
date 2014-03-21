@@ -22,6 +22,8 @@
 
 #include <QGraphicsWidget>
 
+#include <KLocalizedString>
+
 class Page : public QGraphicsWidget
 {
     Q_OBJECT

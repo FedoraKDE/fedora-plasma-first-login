@@ -30,7 +30,7 @@ class QGraphicsWidget;
 class RegionPage : public Page
 {
     Q_OBJECT
-    Q_CLASSINFO("Title", I18N("Region"))
+    Q_CLASSINFO("Title", I18N_NOOP("Region"))
 
   public:
     RegionPage();
