@@ -22,11 +22,11 @@
 #include <KLocale>
 #include <KGlobal>
 #include <KStandardDirs>
+#include <KToolInvocation>
 
 #include <QGraphicsLinearLayout>
 #include <QStandardItemModel>
 #include <QTreeView>
-#include <QProcess>
 
 #include <Plasma/Label>
 #include <Plasma/TreeView>
@@ -102,7 +102,7 @@ void LanguagePage::commitChanges()
     }
 
     const QString lang = currentIndex.data(Qt::UserRole + 1).toString();
-    qDebug() << "setting language to" << lang;
+    kDebug() << "setting language to" << lang;
     KGlobal::locale()->setLanguage(lang, 0); // FIXME actually apply the language globally at some point
 }
 
@@ -118,5 +118,5 @@ void LanguagePage::installMoreLanguages()
 
 void LanguagePage::setupKeyboard()
 {
-    QProcess::startDetached(QLatin1String("kcmshell4 kcm_keyboard"));
+    KToolInvocation::startServiceByDesktopName(QLatin1String("kcm_keyboard"));
 }
