@@ -35,14 +35,23 @@
 #include <QButtonGroup>
 #include <QGraphicsLinearLayout>
 #include <QDebug>
+#include <QTimer>
 
 ColorThemePage::ColorThemePage(QWidget* parent)
     : WizardPage(parent)
     , mRootWidget(0)
     , mAnimation(Plasma::Animator::create(Plasma::Animator::PixmapTransitionAnimation, this))
+    , mAnimationTimer(new QTimer(this))
 {
     setTitle(i18nc("@title:tab", "Color Theme"));
-    mAnimation->setLoopCount(-1);
+    mAnimation->setLoopCount(1);
+    mAnimation->setProperty("duration", 300);
+    mAnimation->setProperty("usesCache", true);
+    mAnimationTimer->setInterval(50);
+    connect(mAnimationTimer, SIGNAL(timeout()),
+            this, SLOT(updatePixmap()));
+    connect(mAnimation, SIGNAL(finished()),
+            mAnimationTimer, SLOT(stop()));
 
     mLight = QPixmap(KGlobal::dirs()->findResource("data", QLatin1String("fedora-plasma-first-login/theme-light.png")));
     mDark =  QPixmap(KGlobal::dirs()->findResource("data", QLatin1String("fedora-plasma-first-login/theme-dark.png")));
@@ -88,9 +97,6 @@ ColorThemePage::ColorThemePage(QWidget* parent)
     buttonsLayout->addItem(mDarkButton);
     buttonGroup->addButton(mDarkButton->nativeWidget());
     layout->addItem(buttonsLayout);
-
-    connect(mAnimation, SIGNAL(currentLoopChanged(int)),
-            this, SLOT(updatePixmap()));
 }
 
 ColorThemePage::~ColorThemePage()
@@ -123,8 +129,6 @@ void ColorThemePage::resizeEvent(QResizeEvent* event)
 
 void ColorThemePage::onMouseEnteredButton()
 {
-    qDebug() << "mouse entered";
-
     QPixmap currentPixmap, targetPixmap;
     if (sender() == mLightButton && mDarkButton->isChecked()) {
         targetPixmap = mLight;
@@ -136,29 +140,26 @@ void ColorThemePage::onMouseEnteredButton()
         return;
     }
 
+    mAnimation->stop();
     mAnimation->setProperty("startPixmap", currentPixmap);
     mAnimation->setProperty("targetPixmap", targetPixmap);
     mAnimation->start();
+    mAnimationTimer->start();
 }
 
 void ColorThemePage::updatePixmap()
 {
-    qDebug() << "update pixmap";
-
     if (!sender()) {
         return;
     }
 
-    const QPixmap pixmap = sender()->property("currentPixmap").value<QPixmap>();
+    const QPixmap pixmap = mAnimation->property("currentPixmap").value<QPixmap>();
     mImageView->nativeWidget()->setPixmap(pixmap.scaled(mImageView->nativeWidget()->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    mAnimation->pause();
 }
 
 
 void ColorThemePage::onMouseLeftButton()
 {
-    qDebug() << "mouse left";
-
     QPixmap currentPixmap, targetPixmap;
     if (sender() == mLightButton && mDarkButton->isChecked()) {
         targetPixmap = mDark;
@@ -170,7 +171,9 @@ void ColorThemePage::onMouseLeftButton()
         return;
     }
 
+    mAnimation->stop();
     mAnimation->setProperty("startPixmap", currentPixmap);
     mAnimation->setProperty("targetPixmap", targetPixmap);
     mAnimation->start();
+    mAnimationTimer->start();
 }

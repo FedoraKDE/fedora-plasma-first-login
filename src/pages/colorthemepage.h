@@ -61,6 +61,7 @@ class ColorThemePage : public WizardPage
     HoverButton* mDarkButton;
 
     Plasma::Animation* mAnimation;
+    QTimer* mAnimationTimer;
 };
 
 #endif // COLORTHEMEPAGE_H
