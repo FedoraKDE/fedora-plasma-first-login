@@ -22,7 +22,8 @@
 
 #include "../page.h"
 
-class QGraphicsWidget;
+#include <KLocalizedString>
+
 class HoverButton;
 
 namespace Plasma {
@@ -47,7 +48,11 @@ class ColorThemePage : public Page
   private Q_SLOTS:
     void onMouseEnteredButton();
     void onMouseLeftButton();
-    void updatePixmap();
+    void onAnimationFinished();
+    void onAnimationProgressed();
+
+    void updatePixmap(const QPixmap& pixmap, Qt::TransformationMode mode);
+
 
   private:
     Plasma::Label* mImageView;

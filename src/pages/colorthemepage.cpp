@@ -39,20 +39,20 @@
 
 ColorThemePage::ColorThemePage()
     : Page()
+    , mImageView(0)
+    , mLight(KGlobal::dirs()->findResource("data", QLatin1String("fedora-plasma-first-login/theme-light.png")))
+    , mDark(KGlobal::dirs()->findResource("data", QLatin1String("fedora-plasma-first-login/theme-dark.png")))
     , mAnimation(Plasma::Animator::create(Plasma::Animator::PixmapTransitionAnimation, this))
     , mAnimationTimer(new QTimer(this))
 {
     mAnimation->setLoopCount(1);
-    mAnimation->setProperty("duration", 300);
+    mAnimation->setProperty("duration", 500);
     mAnimation->setProperty("usesCache", true);
     mAnimationTimer->setInterval(50);
     connect(mAnimationTimer, SIGNAL(timeout()),
-            this, SLOT(updatePixmap()));
+            this, SLOT(onAnimationProgressed()));
     connect(mAnimation, SIGNAL(finished()),
-            mAnimationTimer, SLOT(stop()));
-
-    mLight = QPixmap(KGlobal::dirs()->findResource("data", QLatin1String("fedora-plasma-first-login/theme-light.png")));
-    mDark =  QPixmap(KGlobal::dirs()->findResource("data", QLatin1String("fedora-plasma-first-login/theme-dark.png")));
+            this, SLOT(onAnimationFinished()));
 
     QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->setSpacing(10);
@@ -64,9 +64,10 @@ ColorThemePage::ColorThemePage()
     layout->addItem(label);
 
     mImageView = new Plasma::Label(this);
-    mImageView->nativeWidget()->setPixmap(mLight.scaled(500, 312 , Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    //mImageView->setScaledContents(true);
+    mImageView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    mImageView->nativeWidget()->setAlignment(Qt::AlignHCenter);
     layout->addItem(mImageView);
+    layout->setAlignment(mImageView, Qt::AlignHCenter);
 
     QButtonGroup *buttonGroup = new QButtonGroup(this);
 
@@ -78,6 +79,7 @@ ColorThemePage::ColorThemePage()
     mLightButton->nativeWidget()->setAutoExclusive(true);
     mLightButton->setCheckable(true);
     mLightButton->setChecked(true);
+    mLightButton->setMaximumHeight(50);
     connect(mLightButton, SIGNAL(mouseEntered()), this, SLOT(onMouseEnteredButton()));
     connect(mLightButton, SIGNAL(mouseLeft()), this, SLOT(onMouseLeftButton()));
     buttonsLayout->addItem(mLightButton);
@@ -89,11 +91,14 @@ ColorThemePage::ColorThemePage()
     mDarkButton->setText(i18nc("@title:button", "Dark Theme"));
     mDarkButton->nativeWidget()->setAutoExclusive(true);
     mDarkButton->setCheckable(true);
+    mDarkButton->setMaximumHeight(50);
     connect(mDarkButton, SIGNAL(mouseEntered()), this, SLOT(onMouseEnteredButton()));
     connect(mDarkButton, SIGNAL(mouseLeft()), this, SLOT(onMouseLeftButton()));
     buttonsLayout->addItem(mDarkButton);
     buttonGroup->addButton(mDarkButton->nativeWidget());
     layout->addItem(buttonsLayout);
+
+    updatePixmap(mLight, Qt::SmoothTransformation);
 }
 
 ColorThemePage::~ColorThemePage()
@@ -111,7 +116,7 @@ void ColorThemePage::resizeEvent(QGraphicsSceneResizeEvent* event)
     qDebug() << "resize event";
     Page::resizeEvent(event);
 
-    mImageView->nativeWidget()->setPixmap(mLight.scaled(event->newSize().toSize(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    updatePixmap(mLightButton->isChecked() ? mLight : mDark, Qt::SmoothTransformation);
 }
 
 void ColorThemePage::onMouseEnteredButton()
@@ -134,17 +139,6 @@ void ColorThemePage::onMouseEnteredButton()
     mAnimationTimer->start();
 }
 
-void ColorThemePage::updatePixmap()
-{
-    if (!sender()) {
-        return;
-    }
-
-    const QPixmap pixmap = mAnimation->property("currentPixmap").value<QPixmap>();
-    mImageView->nativeWidget()->setPixmap(pixmap.scaled(mImageView->nativeWidget()->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-}
-
-
 void ColorThemePage::onMouseLeftButton()
 {
     QPixmap currentPixmap, targetPixmap;
@@ -163,4 +157,25 @@ void ColorThemePage::onMouseLeftButton()
     mAnimation->setProperty("targetPixmap", targetPixmap);
     mAnimation->start();
     mAnimationTimer->start();
+}
+
+void ColorThemePage::onAnimationFinished()
+{
+    mAnimationTimer->stop();
+    updatePixmap(mAnimation->property("targetPixmap").value<QPixmap>(),
+                 Qt::SmoothTransformation);
+}
+
+void ColorThemePage::onAnimationProgressed()
+{
+    updatePixmap(mAnimation->property("currentPixmap").value<QPixmap>(),
+                 Qt::FastTransformation);
+}
+
+
+void ColorThemePage::updatePixmap(const QPixmap &pixmap, Qt::TransformationMode mode)
+{
+    const QPixmap scaled = pixmap.scaled(mImageView->nativeWidget()->size(),
+                                         Qt::KeepAspectRatio, mode);
+    mImageView->nativeWidget()->setPixmap(scaled);
 }
