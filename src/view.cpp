@@ -60,7 +60,23 @@ void View::delayedInit()
     mApplet->resize(size());
     mApplet->init();
     mApplet->show();
+    mApplet->installEventFilter(this);
+
+    installEventFilter(mApplet);
 
     containment()->setImmutability(Plasma::SystemImmutable);
     mApplet->setImmutability(Plasma::SystemImmutable);
+}
+
+bool View::eventFilter(QObject* object, QEvent* event)
+{
+    // HACK: Capture move and context menu events for the applet to prevent the
+    // applet from being draggable and showing context menu
+    if (object == mApplet && (event->type() == QEvent::GraphicsSceneMove ||
+                              event->type() == QEvent::GraphicsSceneMouseMove ||
+                              event->type() == QEvent::GraphicsSceneContextMenu)) {
+        return true;
+    }
+
+    return QObject::eventFilter(object, event);
 }

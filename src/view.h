@@ -38,6 +38,7 @@ class View : public Plasma::View
 
   protected:
     void resizeEvent(QResizeEvent* event);
+    bool eventFilter(QObject* object, QEvent* event);
 
   private Q_SLOTS:
     void delayedInit();
