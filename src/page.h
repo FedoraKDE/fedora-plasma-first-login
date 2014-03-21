@@ -22,14 +22,6 @@
 
 #include <QGraphicsWidget>
 
-#define WIZARD_REGISTER_PAGE_TYPE(TYPE) \
-    template<> \
-    void* qMetaTypeConstructHelper(const TYPE* t) \
-    { \
-        Q_UNUSED(t); \
-        return new TYPE(); \
-    }
-
 class Page : public QGraphicsWidget
 {
     Q_OBJECT

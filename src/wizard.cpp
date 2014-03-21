@@ -32,7 +32,6 @@ Wizard::Wizard(QObject* parent)
     : QObject (parent)
     , mCurrentPageId(-1)
 {
-    QTimer::singleShot(0, this, SLOT(delayedInit()));
 }
 
 Wizard* Wizard::instance()
@@ -45,17 +44,6 @@ Wizard* Wizard::instance()
 
 Wizard::~Wizard()
 {
-}
-
-int Wizard::registerPageImpl(int typeId, const QMetaObject* metaObject)
-{
-    mMetaPages.append(MetaPage{ .metaType = typeId, .metaObject = metaObject });
-    return mMetaPages.count() - 1;
-}
-
-void Wizard::delayedInit()
-{
-    setCurrentPage(0);
 }
 
 void Wizard::setCurrentPage(int id)
@@ -91,7 +79,7 @@ void Wizard::preparePendingPages()
 
 void Wizard::preparePage(int id)
 {
-    Page* page = qobject_cast<Page*>(static_cast<QObject*>(QMetaType::construct(mMetaPages[id].metaType)));
+    Page* page = static_cast<Page*>(QMetaType::construct(mMetaPages[id].metaType));
     Q_ASSERT_X(page, "Wizard::preparePage", "Failed to instantiate page");
     mPages.insert(id, page);
     mPendingPages.remove(id);

@@ -26,13 +26,18 @@
 #include <QMetaType>
 #include <QSet>
 
-#include <type_traits>
+#include "page.h"
 
 class Page;
 
 class Wizard : public QObject
 {
     Q_OBJECT
+
+    struct MetaPage {
+        int metaType;
+        const QMetaObject* metaObject;
+    };
 
   public:
     static Wizard* instance();
@@ -41,12 +46,10 @@ class Wizard : public QObject
     template<typename T>
     int registerPage()
     {
-        static_assert(std::is_base_of<Page,T>(), "Wizard::registerPage must be passed a subclass of Page");
-        int typeId = 0;
-        if ((typeId = QMetaType::type(T::staticMetaObject.className())) == 0) {
-            typeId = qRegisterMetaType<T>(T::staticMetaObject.className());
-        }
-        return registerPageImpl(typeId, &T::staticMetaObject);
+        MetaPage metaPage = { .metaType = QMetaTypeId2<T>::qt_metatype_id(),
+                              .metaObject = &T::staticMetaObject };
+        mMetaPages.append(metaPage);
+        return mMetaPages.count() - 1;
     }
 
     int currentPageId() const;
@@ -68,19 +71,15 @@ class Wizard : public QObject
   private Q_SLOTS:
     void preparePendingPages();
     void preparePage(int id);
-    void delayedInit();
 
   private:
     Wizard(QObject *parent = 0);
-    int registerPageImpl(int typeId, const QMetaObject *metaObj);
+    //int registerPageImpl(int typeId, const QMetaObject *metaObj);
 
   private:
     int mCurrentPageId;
 
-    typedef struct {
-        int metaType;
-        const QMetaObject* metaObject;
-    } MetaPage;
+
     QVector<MetaPage> mMetaPages;
     QMap<int, Page*> mPages;
     QSet<int> mPendingPages;
@@ -89,10 +88,14 @@ class Wizard : public QObject
     static Wizard* sInstance;
 };
 
-template<typename T>
-void wizardRegisterPage()
-{
-    Wizard::instance()->registerPage<T>();
-}
+#define WIZARD_REGISTER_PAGE_TYPE(TYPE) \
+    Q_DECLARE_METATYPE(TYPE) \
+    template<> \
+    void* qMetaTypeConstructHelper(const TYPE* t) \
+    { \
+        Q_UNUSED(t); \
+        return new TYPE(); \
+    } \
+    static const int wizard___pageType##TYPE##TypeId = Wizard::instance()->registerPage<TYPE>();
 
 #endif // WIZARD_H

@@ -41,7 +41,6 @@
 
 #include <KStandardDirs>
 
-
 WIZARD_REGISTER_PAGE_TYPE(WelcomePage)
 WIZARD_REGISTER_PAGE_TYPE(LanguagePage)
 WIZARD_REGISTER_PAGE_TYPE(RegionPage)
@@ -53,11 +52,6 @@ Applet::Applet(QGraphicsItem* parent)
 {
     setBackgroundHints(StandardBackground);
     setHasConfigurationInterface(false);
-
-    wizardRegisterPage<WelcomePage>();
-    wizardRegisterPage<LanguagePage>();
-    wizardRegisterPage<RegionPage>();
-    wizardRegisterPage<ColorThemePage>();
 
     connect(Wizard::instance(), SIGNAL(currentPageChanged(int)),
             this, SLOT(wizardPageChanged(int)));
@@ -120,6 +114,11 @@ void Applet::init()
         connect(mNextButton, SIGNAL(clicked()),
                 Wizard::instance(), SLOT(next()));
     }
+
+    // Start!
+    QMetaObject::invokeMethod(Wizard::instance(), "setCurrentPage",
+                              Qt::QueuedConnection,
+                              Q_ARG(int, 0));
 }
 
 void Applet::wizardPageChanged(int id)

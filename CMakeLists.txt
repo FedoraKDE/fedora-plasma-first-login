@@ -38,14 +38,6 @@ include_directories(${QT_INCLUDES}
                     ${PACKAGEKIT_QT2_INCLUDE_DIR}
 )
 
-# Enable C++11 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wnon-virtual-dtor -Wundef -Wcast-align -Wchar-subscripts -Wall -Wextra")
-endif()
-
-
-
-
 add_subdirectory(src)
 
 install(DIRECTORY data/ DESTINATION ${DATA_INSTALL_DIR}/fedora-plasma-first-login)
