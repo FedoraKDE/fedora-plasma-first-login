@@ -7,9 +7,9 @@ set(FPFL_sources
     sidewidget.cpp
     sidewidgetpagelabel.cpp
     wizard.cpp
-    wizardapplet.cpp
-    wizardpage.cpp
-    wizardview.cpp
+    applet.cpp
+    page.cpp
+    view.cpp
 )
 
 set(FPFL_pages

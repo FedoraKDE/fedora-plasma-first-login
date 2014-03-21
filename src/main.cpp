@@ -21,11 +21,8 @@
 #include <KApplication>
 #include <KLocalizedString>
 #include <KCmdLineArgs>
-#include <Plasma/Corona>
-#include <plasma/view.h>
 
-#include "wizard.h"
-#include "wizardview.h"
+#include "view.h"
 
 int main(int argc, char **argv)
 {
@@ -43,7 +40,7 @@ int main(int argc, char **argv)
 
     KApplication app;
 
-    WizardView view;
+    View view;
     view.resize(800, 600);
     view.show();
 

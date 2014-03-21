@@ -37,7 +37,7 @@
 #include <PackageKit/packagekit-qt2/Transaction>
 
 LanguagePage::LanguagePage(QWidget* parent)
-    : WizardPage(parent)
+    : Page(parent)
     , mWidget(0)
 {
     setTitle(i18nc("@title:tab", "Language"));

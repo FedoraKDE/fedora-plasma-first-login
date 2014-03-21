@@ -18,7 +18,7 @@
  */
 
 #include "wizard.h"
-#include "wizardpage.h"
+#include "page.h"
 #include "pages/welcomepage.h"
 #include "pages/languagepage.h"
 #include "pages/regionpage.h"
@@ -71,7 +71,7 @@ int Wizard::registerPage()
 void Wizard::onCurrentIdChanged(int id)
 {
     if (mCurrentPageId > -1 && id > mCurrentPageId) {
-        WizardPage *previousPage = qobject_cast<WizardPage*>(page(mCurrentPageId));
+        Page *previousPage = qobject_cast<Page*>(page(mCurrentPageId));
         if (!previousPage) {
             return;
         }

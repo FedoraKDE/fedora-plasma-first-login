@@ -20,14 +20,14 @@
 #ifndef LANGUAGEPAGE_H
 #define LANGUAGEPAGE_H
 
-#include "../wizardpage.h"
+#include "../page.h"
 #include <QGraphicsWidget>
 
 namespace Plasma {
 class TreeView;
 }
 
-class LanguagePage : public WizardPage
+class LanguagePage : public Page
 {
     Q_OBJECT
 

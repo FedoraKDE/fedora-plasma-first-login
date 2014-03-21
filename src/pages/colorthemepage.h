@@ -20,7 +20,7 @@
 #ifndef COLORTHEMEPAGE_H
 #define COLORTHEMEPAGE_H
 
-#include "../wizardpage.h"
+#include "../page.h"
 
 class QGraphicsWidget;
 class HoverButton;
@@ -30,7 +30,7 @@ class Label;
 class Animation;
 }
 
-class ColorThemePage : public WizardPage
+class ColorThemePage : public Page
 {
     Q_OBJECT
 

@@ -17,43 +17,22 @@
  *
  */
 
-#ifndef WIZARDAPPLET_H
-#define WIZARDAPPLET_H
+#include "page.h"
 
-#include <Plasma/Applet>
-
-#include "wizard.h"
-#include "sidewidgetpagelabel.h"
-
-class QGraphicsLinearLayout;
-namespace Plasma {
-class PushButton;
-class Label;
+Page::Page(QWidget* parent)
+    : QWizardPage(parent)
+{
 }
 
-class WizardApplet : public Plasma::Applet
+Page::~Page()
 {
-    Q_OBJECT
+}
 
-  public:
-    WizardApplet(QGraphicsItem* parent = 0);
-    ~WizardApplet();
+void Page::commitChanges()
+{
+}
 
-    void init();
-
-  private Q_SLOTS:
-    void wizardPageChanged(int id);
-    void slotNextPage();
-
-  private:
-    Wizard mWizard;
-
-    Plasma::FrameSvg* mBackgroundSvg;
-    Plasma::PushButton* mPrevButton;
-    Plasma::PushButton* mNextButton;
-    Plasma::Label* mPageTitle;
-
-    QGraphicsLinearLayout* mContentLayout;
-};
-
-#endif // WIZARDAPPLET_H
+bool Page::shouldSkip() const
+{
+    return false;
+}

@@ -27,7 +27,7 @@
 #include <QGraphicsDropShadowEffect>
 
 WelcomePage::WelcomePage(QWidget* parent)
-    : WizardPage(parent)
+    : Page(parent)
     , mLabel(0)
 {
     setTitle(i18nc("@title:tab", "Welcome"));

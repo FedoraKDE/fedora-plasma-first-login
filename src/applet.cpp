@@ -17,8 +17,8 @@
  *
  */
 
-#include "wizardapplet.h"
-#include "wizardpage.h"
+#include "applet.h"
+#include "page.h"
 #include "sidewidget.h"
 #include "frame.h"
 
@@ -35,7 +35,7 @@
 
 #include <KStandardDirs>
 
-WizardApplet::WizardApplet(QGraphicsItem* parent)
+Applet::Applet(QGraphicsItem* parent)
     : Plasma::Applet(parent, QString(), -1)
     , mBackgroundSvg(0)
 {
@@ -46,11 +46,11 @@ WizardApplet::WizardApplet(QGraphicsItem* parent)
             this, SLOT(wizardPageChanged(int)));
 }
 
-WizardApplet::~WizardApplet()
+Applet::~Applet()
 {
 }
 
-void WizardApplet::init()
+void Applet::init()
 {
     QGraphicsGridLayout *contentLayout = new QGraphicsGridLayout;
     setLayout(contentLayout);
@@ -107,12 +107,12 @@ void WizardApplet::init()
     mWizard.init();
 }
 
-void WizardApplet::wizardPageChanged(int id)
+void Applet::wizardPageChanged(int id)
 {
     mNextButton->setEnabled(mWizard.nextId() != -1);
     mPrevButton->setEnabled(id != mWizard.startId());
 
-    WizardPage* page = qobject_cast<WizardPage*>(mWizard.page(id));
+    Page* page = qobject_cast<Page*>(mWizard.page(id));
 
     if (mContentLayout->count() > 1) {
         dynamic_cast<QGraphicsWidget*>(mContentLayout->itemAt(1))->hide();
@@ -124,9 +124,9 @@ void WizardApplet::wizardPageChanged(int id)
     mContentLayout->setStretchFactor(mContentLayout->itemAt(1), 100);
 }
 
-void WizardApplet::slotNextPage()
+void Applet::slotNextPage()
 {
-    WizardPage * currentPage = qobject_cast<WizardPage *>(mWizard.currentPage());
+    Page * currentPage = qobject_cast<Page *>(mWizard.currentPage());
     if (currentPage) {
         if (currentPage->isComplete()) {
             currentPage->commitChanges();

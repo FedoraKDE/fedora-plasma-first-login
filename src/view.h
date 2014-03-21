@@ -17,25 +17,34 @@
  *
  */
 
-#ifndef WIZARDPAGE_H
-#define WIZARDPAGE_H
+#ifndef WIZARDVIEW_H
+#define WIZARDVIEW_H
 
-#include <QtGui/QWizard>
+#include <Plasma/View>
+#include <Plasma/Corona>
 
-class QGraphicsLayoutItem;
-
-class WizardPage : public QWizardPage
+class Applet;
+/**
+ * Creates the background containment, the content applet and takes care about
+ * their layout
+ */
+class View : public Plasma::View
 {
     Q_OBJECT
 
   public:
-    WizardPage(QWidget* parent = 0);
-    virtual ~WizardPage();
+    View(QWidget* parent = 0);
+    ~View();
 
-    virtual bool shouldSkip() const;
-    virtual void commitChanges();
+  protected:
+    void resizeEvent(QResizeEvent* event);
 
-    virtual QGraphicsLayoutItem* rootWidget() const = 0;
+  private Q_SLOTS:
+    void delayedInit();
+
+  private:
+    Plasma::Corona mCorona;
+    Applet* mApplet;
 };
 
-#endif // WIZARDPAGE_H
+#endif // WIZARDVIEW_H

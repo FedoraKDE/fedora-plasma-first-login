@@ -17,34 +17,43 @@
  *
  */
 
-#ifndef WIZARDVIEW_H
-#define WIZARDVIEW_H
+#ifndef WIZARDAPPLET_H
+#define WIZARDAPPLET_H
 
-#include <Plasma/View>
-#include <Plasma/Corona>
+#include <Plasma/Applet>
 
-class WizardApplet;
-/**
- * Creates the background containment, the content applet and takes care about
- * their layout
- */
-class WizardView : public Plasma::View
+#include "wizard.h"
+#include "sidewidgetpagelabel.h"
+
+class QGraphicsLinearLayout;
+namespace Plasma {
+class PushButton;
+class Label;
+}
+
+class Applet : public Plasma::Applet
 {
     Q_OBJECT
 
   public:
-    WizardView(QWidget* parent = 0);
-    ~WizardView();
+    Applet(QGraphicsItem* parent = 0);
+    ~Applet();
 
-  protected:
-    void resizeEvent(QResizeEvent* event);
+    void init();
 
   private Q_SLOTS:
-    void delayedInit();
+    void wizardPageChanged(int id);
+    void slotNextPage();
 
   private:
-    Plasma::Corona mCorona;
-    WizardApplet* mApplet;
+    Wizard mWizard;
+
+    Plasma::FrameSvg* mBackgroundSvg;
+    Plasma::PushButton* mPrevButton;
+    Plasma::PushButton* mNextButton;
+    Plasma::Label* mPageTitle;
+
+    QGraphicsLinearLayout* mContentLayout;
 };
 
-#endif // WIZARDVIEW_H
+#endif // WIZARDAPPLET_H

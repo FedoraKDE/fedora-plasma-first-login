@@ -17,22 +17,25 @@
  *
  */
 
-#include "wizardpage.h"
+#ifndef WIZARDPAGE_H
+#define WIZARDPAGE_H
 
-WizardPage::WizardPage(QWidget* parent)
-    : QWizardPage(parent)
-{
-}
+#include <QtGui/QWizard>
 
-WizardPage::~WizardPage()
-{
-}
+class QGraphicsLayoutItem;
 
-void WizardPage::commitChanges()
+class Page : public QWizardPage
 {
-}
+    Q_OBJECT
 
-bool WizardPage::shouldSkip() const
-{
-    return false;
-}
+  public:
+    Page(QWidget* parent = 0);
+    virtual ~Page();
+
+    virtual bool shouldSkip() const;
+    virtual void commitChanges();
+
+    virtual QGraphicsLayoutItem* rootWidget() const = 0;
+};
+
+#endif // WIZARDPAGE_H

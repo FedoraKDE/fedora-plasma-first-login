@@ -20,14 +20,14 @@
 #ifndef REGIONPAGE_H
 #define REGIONPAGE_H
 
-#include "../wizardpage.h"
+#include "../page.h"
 
 namespace Plasma {
 class TreeView;
 }
 
 class QGraphicsWidget;
-class RegionPage : public WizardPage
+class RegionPage : public Page
 {
     Q_OBJECT
   public:

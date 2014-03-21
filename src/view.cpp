@@ -17,8 +17,8 @@
  *
  */
 
-#include "wizardview.h"
-#include "wizardapplet.h"
+#include "view.h"
+#include "applet.h"
 
 #include <QResizeEvent>
 #include <QTimer>
@@ -27,7 +27,7 @@
 
 #include <KDebug>
 
-WizardView::WizardView(QWidget* parent)
+View::View(QWidget* parent)
     : Plasma::View(0, parent)
     , mApplet(0)
 {
@@ -40,11 +40,11 @@ WizardView::WizardView(QWidget* parent)
     QTimer::singleShot(0, this, SLOT(delayedInit()));
 }
 
-WizardView::~WizardView()
+View::~View()
 {
 }
 
-void WizardView::resizeEvent(QResizeEvent* event)
+void View::resizeEvent(QResizeEvent* event)
 {
     kDebug() << event->oldSize() << event->size();
     containment()->resize(event->size());
@@ -53,9 +53,9 @@ void WizardView::resizeEvent(QResizeEvent* event)
     }
 }
 
-void WizardView::delayedInit()
+void View::delayedInit()
 {
-    mApplet = new WizardApplet(containment());
+    mApplet = new Applet(containment());
     containment()->addApplet(mApplet, QPointF(0, 0));
     mApplet->resize(size());
     mApplet->init();

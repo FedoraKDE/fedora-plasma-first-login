@@ -38,7 +38,7 @@
 #include <Plasma/PushButton>
 
 RegionPage::RegionPage(QWidget* parent)
-    : WizardPage(parent)
+    : Page(parent)
     , mWidget(0)
 {
     setTitle(i18nc("@title:tab", "Region"));
@@ -81,7 +81,7 @@ void RegionPage::initializePage()
     QList<QLocale> matchingRegions = QLocale::matchingLocales(userLocale.language(), QLocale::AnyScript, QLocale::AnyCountry);
 
     QStandardItemModel* model = new QStandardItemModel(mWidget);
-    Q_FOREACH (const QLocale & loc, matchingRegions) {
+    Q_FOREACH (const QLocale &loc, matchingRegions) {
         const QString countryCode = loc.name().section(QLatin1Char('_'), 1).toLower(); // cs_CZ
         const QString flag = KGlobal::dirs()->findResource("locale", QString::fromLatin1("l10n/%1/flag.png").arg(countryCode));
         QString countryName = loc.nativeCountryName();

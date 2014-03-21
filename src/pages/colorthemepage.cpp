@@ -38,7 +38,7 @@
 #include <QTimer>
 
 ColorThemePage::ColorThemePage(QWidget* parent)
-    : WizardPage(parent)
+    : Page(parent)
     , mRootWidget(0)
     , mAnimation(Plasma::Animator::create(Plasma::Animator::PixmapTransitionAnimation, this))
     , mAnimationTimer(new QTimer(this))

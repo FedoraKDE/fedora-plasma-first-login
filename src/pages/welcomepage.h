@@ -20,13 +20,13 @@
 #ifndef WELCOMEPAGE_H
 #define WELCOMEPAGE_H
 
-#include "../wizardpage.h"
+#include "../page.h"
 
 namespace Plasma {
 class Label;
 }
 
-class WelcomePage : public WizardPage
+class WelcomePage : public Page
 {
     Q_OBJECT
 
