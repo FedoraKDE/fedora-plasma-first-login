@@ -82,7 +82,6 @@ void RegionPage::initializePage()
     QStandardItemModel* model = new QStandardItemModel(mWidget);
     Q_FOREACH (const QLocale & loc, matchingRegions) {
         const QString countryCode = loc.name().section(QLatin1Char('_'), 1).toLower(); // cs_CZ
-        qDebug() << "adding matching country" << countryCode;
         const QString flag = KGlobal::dirs()->findResource("locale", QString::fromLatin1("l10n/%1/flag.png").arg(countryCode));
         QString countryName = loc.nativeCountryName();
         if (countryName.isEmpty())
