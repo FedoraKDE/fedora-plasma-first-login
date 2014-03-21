@@ -39,4 +39,5 @@ include_directories(${QT_INCLUDES}
 )
 
 add_subdirectory(src)
-add_subdirectory(data)
+
+install(DIRECTORY data/ DESTINATION ${DATA_INSTALL_DIR}/fedora-plasma-first-login)
