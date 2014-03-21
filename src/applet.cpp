@@ -21,6 +21,12 @@
 #include "page.h"
 #include "sidewidget.h"
 #include "frame.h"
+#include "wizard.h"
+
+#include "pages/welcomepage.h"
+#include "pages/colorthemepage.h"
+#include "pages/regionpage.h"
+#include "pages/languagepage.h"
 
 #include <QGraphicsLinearLayout>
 #include <QLabel>
@@ -35,6 +41,12 @@
 
 #include <KStandardDirs>
 
+
+WIZARD_REGISTER_PAGE_TYPE(WelcomePage)
+WIZARD_REGISTER_PAGE_TYPE(LanguagePage)
+WIZARD_REGISTER_PAGE_TYPE(RegionPage)
+WIZARD_REGISTER_PAGE_TYPE(ColorThemePage)
+
 Applet::Applet(QGraphicsItem* parent)
     : Plasma::Applet(parent, QString(), -1)
     , mBackgroundSvg(0)
@@ -42,7 +54,12 @@ Applet::Applet(QGraphicsItem* parent)
     setBackgroundHints(StandardBackground);
     setHasConfigurationInterface(false);
 
-    connect(&mWizard, SIGNAL(currentIdChanged(int)),
+    wizardRegisterPage<WelcomePage>();
+    wizardRegisterPage<LanguagePage>();
+    wizardRegisterPage<RegionPage>();
+    wizardRegisterPage<ColorThemePage>();
+
+    connect(Wizard::instance(), SIGNAL(currentPageChanged(int)),
             this, SLOT(wizardPageChanged(int)));
 }
 
@@ -57,7 +74,7 @@ void Applet::init()
 
     // Main content
     {
-        SideWidget *sideWidget = new SideWidget(&mWizard, this);
+        SideWidget *sideWidget = new SideWidget(this);
         contentLayout->addItem(sideWidget, 0, 0, 2, 1);
 
         Frame *frame = new Frame(this);
@@ -91,7 +108,7 @@ void Applet::init()
         buttonsLayout->addItem(mPrevButton );
         buttonsLayout->setAlignment(mPrevButton , Qt::AlignVCenter);
         connect(mPrevButton, SIGNAL(clicked()),
-                &mWizard, SLOT(back()));
+                Wizard::instance(), SLOT(previous()));
 
         buttonsLayout->addStretch(1);
 
@@ -101,36 +118,24 @@ void Applet::init()
         buttonsLayout->addItem(mNextButton);
         buttonsLayout->setAlignment(mNextButton, Qt::AlignVCenter);
         connect(mNextButton, SIGNAL(clicked()),
-                this, SLOT(slotNextPage()));
+                Wizard::instance(), SLOT(next()));
     }
-
-    mWizard.init();
 }
 
 void Applet::wizardPageChanged(int id)
 {
-    mNextButton->setEnabled(mWizard.nextId() != -1);
-    mPrevButton->setEnabled(id != mWizard.startId());
+    mNextButton->setEnabled(!Wizard::instance()->isLastPage());
+    mPrevButton->setEnabled(id > 0);
 
-    Page* page = qobject_cast<Page*>(mWizard.page(id));
 
     if (mContentLayout->count() > 1) {
         dynamic_cast<QGraphicsWidget*>(mContentLayout->itemAt(1))->hide();
         mContentLayout->removeAt(1);
     }
-    mPageTitle->setText(page->title());
-    mContentLayout->addItem(page->rootWidget());
-    dynamic_cast<QGraphicsWidget*>(page->rootWidget())->show();
-    mContentLayout->setStretchFactor(mContentLayout->itemAt(1), 100);
-}
 
-void Applet::slotNextPage()
-{
-    Page * currentPage = qobject_cast<Page *>(mWizard.currentPage());
-    if (currentPage) {
-        if (currentPage->isComplete()) {
-            currentPage->commitChanges();
-        }
-        mWizard.next();
-    }
+    Page* page = Wizard::instance()->currentPage();
+    mPageTitle->setText(page->title());
+    mContentLayout->addItem(page);
+    page->show();
+    mContentLayout->setStretchFactor(mContentLayout->itemAt(1), 100);
 }

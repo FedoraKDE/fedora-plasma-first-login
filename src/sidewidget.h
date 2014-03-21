@@ -31,16 +31,13 @@ class SideWidget : public Plasma::Frame
     Q_OBJECT
 
   public:
-    SideWidget(Wizard* wizard, QGraphicsWidget* parent = 0);
+    SideWidget(QGraphicsWidget* parent = 0);
     ~SideWidget();
 
   private Q_SLOTS:
     void onPageChanged(int id);
-    void onPageAdded(int id);
 
   private:
-    Wizard* mWizard;
-
     QGraphicsLinearLayout* mTitlesLayout;
     QMap<int, SideWidgetPageLabel*> mTitleLabels;
     int mActivePage;

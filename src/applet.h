@@ -22,7 +22,6 @@
 
 #include <Plasma/Applet>
 
-#include "wizard.h"
 #include "sidewidgetpagelabel.h"
 
 class QGraphicsLinearLayout;
@@ -43,11 +42,8 @@ class Applet : public Plasma::Applet
 
   private Q_SLOTS:
     void wizardPageChanged(int id);
-    void slotNextPage();
 
   private:
-    Wizard mWizard;
-
     Plasma::FrameSvg* mBackgroundSvg;
     Plasma::PushButton* mPrevButton;
     Plasma::PushButton* mNextButton;

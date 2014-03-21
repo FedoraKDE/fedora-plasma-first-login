@@ -20,28 +20,79 @@
 #ifndef WIZARD_H
 #define WIZARD_H
 
-#include <QtGui/QWizard>
+#include <QObject>
+#include <QVector>
+#include <QMap>
+#include <QMetaType>
+#include <QSet>
 
-class Wizard : public QWizard
+#include <type_traits>
+
+class Page;
+
+class Wizard : public QObject
 {
     Q_OBJECT
 
   public:
-    explicit Wizard();
-    virtual ~Wizard();
-
-    void init();
+    static Wizard* instance();
+    ~Wizard();
 
     template<typename T>
-    int registerPage();
+    int registerPage()
+    {
+        static_assert(std::is_base_of<Page,T>(), "Wizard::registerPage must be passed a subclass of Page");
+        int typeId = 0;
+        if ((typeId = QMetaType::type(T::staticMetaObject.className())) == 0) {
+            typeId = qRegisterMetaType<T>(T::staticMetaObject.className());
+        }
+        return registerPageImpl(typeId, &T::staticMetaObject);
+    }
 
+    int currentPageId() const;
+    Page* currentPage() const;
+
+    bool isLastPage() const;
+
+    int count() const;
+    QString pageTitle(int id) const;
+
+  public Q_SLOTS:
+    void next();
+    void previous();
+    void setCurrentPage(int id);
+
+  Q_SIGNALS:
+    void currentPageChanged(int id);
 
   private Q_SLOTS:
-    void onCurrentIdChanged(int id);
+    void preparePendingPages();
+    void preparePage(int id);
+    void delayedInit();
+
+  private:
+    Wizard(QObject *parent = 0);
+    int registerPageImpl(int typeId, const QMetaObject *metaObj);
 
   private:
     int mCurrentPageId;
 
+    typedef struct {
+        int metaType;
+        const QMetaObject* metaObject;
+    } MetaPage;
+    QVector<MetaPage> mMetaPages;
+    QMap<int, Page*> mPages;
+    QSet<int> mPendingPages;
+    QSet<int> mInitializedPages;
+
+    static Wizard* sInstance;
 };
+
+template<typename T>
+void wizardRegisterPage()
+{
+    Wizard::instance()->registerPage<T>();
+}
 
 #endif // WIZARD_H

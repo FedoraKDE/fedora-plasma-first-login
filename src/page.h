@@ -20,22 +20,33 @@
 #ifndef WIZARDPAGE_H
 #define WIZARDPAGE_H
 
-#include <QtGui/QWizard>
+#include <QGraphicsWidget>
 
-class QGraphicsLayoutItem;
+#define WIZARD_REGISTER_PAGE_TYPE(TYPE) \
+    template<> \
+    void* qMetaTypeConstructHelper(const TYPE* t) \
+    { \
+        Q_UNUSED(t); \
+        return new TYPE(); \
+    }
 
-class Page : public QWizardPage
+class Page : public QGraphicsWidget
 {
     Q_OBJECT
 
   public:
-    Page(QWidget* parent = 0);
-    virtual ~Page();
+    Page();
+    virtual ~Page() = 0;
 
-    virtual bool shouldSkip() const;
+    QString title() const;
+
+    virtual void initializePage();
+    virtual bool isComplete() const;
     virtual void commitChanges();
+    virtual bool shouldSkip() const;
 
-    virtual QGraphicsLayoutItem* rootWidget() const = 0;
+  private:
+    QString mTitle;
 };
 
 #endif // WIZARDPAGE_H

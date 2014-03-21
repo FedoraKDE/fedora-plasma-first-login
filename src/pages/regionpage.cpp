@@ -37,28 +37,23 @@
 #include <Plasma/TreeView>
 #include <Plasma/PushButton>
 
-RegionPage::RegionPage(QWidget* parent)
-    : Page(parent)
-    , mWidget(0)
+RegionPage::RegionPage()
+    : Page()
 {
-    setTitle(i18nc("@title:tab", "Region"));
-    //qDebug() << "User KLocale language is" << KGlobal::locale()->language();
-
-    mWidget = new QGraphicsWidget;
     QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->setSpacing(10);
-    mWidget->setLayout(layout);
+    setLayout(layout);
 
-    Plasma::Label* label = new Plasma::Label(mWidget);
+    Plasma::Label* label = new Plasma::Label(this);
     label->setText(i18n("<p>Select your region below. This will apply the region's settings globally in KDE.</p>"));
     layout->addItem(label);
 
-    mRegionsWidget = new Plasma::TreeView(mWidget);
+    mRegionsWidget = new Plasma::TreeView(this);
     mRegionsWidget->nativeWidget()->setHeaderHidden(true);
     mRegionsWidget->nativeWidget()->setRootIsDecorated(false);
     layout->addItem(mRegionsWidget);
 
-    Plasma::PushButton* langBtn = new Plasma::PushButton(mWidget);
+    Plasma::PushButton* langBtn = new Plasma::PushButton(this);
     langBtn->setText(i18nc("@action:button", "&Date && time settings..."));
     langBtn->setIcon(KIcon(QLatin1String("preferences-system-time")));
     connect(langBtn, SIGNAL(clicked()),
@@ -68,7 +63,6 @@ RegionPage::RegionPage(QWidget* parent)
 
 RegionPage::~RegionPage()
 {
-    delete mWidget;
 }
 
 void RegionPage::initializePage()
@@ -80,7 +74,7 @@ void RegionPage::initializePage()
 
     QList<QLocale> matchingRegions = QLocale::matchingLocales(userLocale.language(), QLocale::AnyScript, QLocale::AnyCountry);
 
-    QStandardItemModel* model = new QStandardItemModel(mWidget);
+    QStandardItemModel* model = new QStandardItemModel(this);
     Q_FOREACH (const QLocale &loc, matchingRegions) {
         const QString countryCode = loc.name().section(QLatin1Char('_'), 1).toLower(); // cs_CZ
         const QString flag = KGlobal::dirs()->findResource("locale", QString::fromLatin1("l10n/%1/flag.png").arg(countryCode));
@@ -105,11 +99,6 @@ void RegionPage::commitChanges()
     const QString country = currentIndex.data(Qt::UserRole + 1).toString();
     kDebug() << "setting country to" << country;
     KGlobal::locale()->setCountry(country, 0); // FIXME actually apply the country globally at some point
-}
-
-QGraphicsLayoutItem* RegionPage::rootWidget() const
-{
-    return mWidget;
 }
 
 void RegionPage::slotDateTimeSettings()

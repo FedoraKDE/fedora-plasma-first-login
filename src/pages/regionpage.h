@@ -30,19 +30,19 @@ class QGraphicsWidget;
 class RegionPage : public Page
 {
     Q_OBJECT
+    Q_CLASSINFO("Title", I18N("Region"))
+
   public:
-    RegionPage(QWidget* parent);
+    RegionPage();
     ~RegionPage();
 
     void initializePage();
     void commitChanges();
-    QGraphicsLayoutItem* rootWidget() const;
 
   private Q_SLOTS:
     void slotDateTimeSettings();
 
   private:
-    QGraphicsWidget* mWidget;
     Plasma::TreeView* mRegionsWidget;
 };
 

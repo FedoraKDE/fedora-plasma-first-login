@@ -19,64 +19,131 @@
 
 #include "wizard.h"
 #include "page.h"
-#include "pages/welcomepage.h"
-#include "pages/languagepage.h"
-#include "pages/regionpage.h"
-#include "pages/colorthemepage.h"
 
 #include <KDebug>
-
-#include <Plasma/Containment>
 #include <QTimer>
+#include <QMetaClassInfo>
 
-Wizard::Wizard()
-    : QWizard()
+#include <KLocalizedString>
+
+Wizard* Wizard::sInstance = 0;
+
+Wizard::Wizard(QObject* parent)
+    : QObject (parent)
     , mCurrentPageId(-1)
 {
-    connect(this, SIGNAL(currentIdChanged(int)),
-            this, SLOT(onCurrentIdChanged(int)));
+    QTimer::singleShot(0, this, SLOT(delayedInit()));
+}
+
+Wizard* Wizard::instance()
+{
+    if (sInstance == 0) {
+        sInstance = new Wizard;
+    }
+    return sInstance;
 }
 
 Wizard::~Wizard()
 {
 }
 
-void Wizard::init()
+int Wizard::registerPageImpl(int typeId, const QMetaObject* metaObject)
 {
-    registerPage<WelcomePage>();
-    registerPage<LanguagePage>();
-    registerPage<RegionPage>();
-    registerPage<ColorThemePage>();
-
-    // Workaround for QWizard not initializing itself until show() is called
-    // (which we don't call)
-    restart();
+    mMetaPages.append(MetaPage{ .metaType = typeId, .metaObject = metaObject });
+    return mMetaPages.count() - 1;
 }
 
-
-template<typename T>
-int Wizard::registerPage()
+void Wizard::delayedInit()
 {
-    T *page = new T(this);
-    if (page->shouldSkip()) {
-        kDebug() << "Skipped page" << page->title();
-        page->deleteLater();
-        return -1;
-    }
-
-    kDebug() << "Added page" << page->title();
-    return addPage(page);
+    setCurrentPage(0);
 }
 
-void Wizard::onCurrentIdChanged(int id)
+void Wizard::setCurrentPage(int id)
 {
-    if (mCurrentPageId > -1 && id > mCurrentPageId) {
-        Page *previousPage = qobject_cast<Page*>(page(mCurrentPageId));
-        if (!previousPage) {
-            return;
-        }
+    if (id < 0 || id >= mMetaPages.size()) {
+        kWarning() << "Invalid page ID";
+        return;
     }
 
     mCurrentPageId = id;
-    page(mCurrentPageId)->initializePage();
+    if (!mPages.contains(mCurrentPageId)) {
+        preparePage(mCurrentPageId);
+    }
+
+    if (!mInitializedPages.contains(id)) {
+        currentPage()->initializePage();
+    }
+
+    if (!isLastPage()) {
+        mPendingPages.insert(mCurrentPageId + 1);
+        QTimer::singleShot(300, this, SLOT(preparePendingPages()));
+    }
+
+    Q_EMIT currentPageChanged(id);
 }
+
+void Wizard::preparePendingPages()
+{
+    while (!mPendingPages.isEmpty()) {
+        preparePage(*mPendingPages.constBegin());
+    }
+}
+
+void Wizard::preparePage(int id)
+{
+    Page* page = qobject_cast<Page*>(static_cast<QObject*>(QMetaType::construct(mMetaPages[id].metaType)));
+    Q_ASSERT_X(page, "Wizard::preparePage", "Failed to instantiate page");
+    mPages.insert(id, page);
+    mPendingPages.remove(id);
+}
+
+
+int Wizard::currentPageId() const
+{
+    return mCurrentPageId;
+}
+
+Page* Wizard::currentPage() const
+{
+    return mPages[mCurrentPageId];
+}
+
+bool Wizard::isLastPage() const
+{
+    return mCurrentPageId >= mMetaPages.size() - 1;
+}
+
+int Wizard::count() const
+{
+    return mMetaPages.count();
+}
+
+QString Wizard::pageTitle(int id) const
+{
+    if (mPages.contains(id)) {
+        return mPages[id]->title();
+    }
+
+    const QMetaObject* metaObject = mMetaPages[id].metaObject;
+    const int offset = metaObject->indexOfClassInfo("Title");
+    return i18n(metaObject->classInfo(offset).value());
+}
+
+void Wizard::next()
+{
+    if (!isLastPage()) {
+        Page* page = currentPage();
+        if (page->isComplete()) {
+            page->commitChanges();
+        }
+        setCurrentPage(mCurrentPageId + 1);
+    }
+}
+
+void Wizard::previous()
+{
+    if (mCurrentPageId > 0) {
+        setCurrentPage(mCurrentPageId - 1);
+    }
+}
+

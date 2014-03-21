@@ -21,7 +21,6 @@
 #define LANGUAGEPAGE_H
 
 #include "../page.h"
-#include <QGraphicsWidget>
 
 namespace Plasma {
 class TreeView;
@@ -30,24 +29,21 @@ class TreeView;
 class LanguagePage : public Page
 {
     Q_OBJECT
+    Q_CLASSINFO("Title", I18N("Language"))
 
   public:
-    LanguagePage(QWidget* parent);
+    LanguagePage();
     ~LanguagePage();
 
     void initializePage();
     void commitChanges();
-
-    QGraphicsLayoutItem* rootWidget() const;
 
   private Q_SLOTS:
     void installMoreLanguages();
     void setupKeyboard();
 
   private:
-    QGraphicsWidget* mWidget;
     Plasma::TreeView* mLangsWidget;
-    bool mInitialized;
 };
 
 #endif // LANGUAGEPAGE_H

@@ -25,26 +25,15 @@
 #include <Plasma/Label>
 #include <QtGui/QLabel>
 #include <QGraphicsDropShadowEffect>
+#include <QGraphicsLinearLayout>
 
-WelcomePage::WelcomePage(QWidget* parent)
-    : Page(parent)
-    , mLabel(0)
+WelcomePage::WelcomePage()
+    : Page()
 {
-    setTitle(i18nc("@title:tab", "Welcome"));
-}
+    QGraphicsLinearLayout* layout = new QGraphicsLinearLayout;
+    setLayout(layout);
 
-WelcomePage::~WelcomePage()
-{
-    delete mLabel;
-}
-
-void WelcomePage::initializePage()
-{
-    if (mLabel) {
-        return;
-    }
-
-    mLabel = new Plasma::Label;
+    mLabel = new Plasma::Label(this);
     QFont font = KGlobalSettings::generalFont();
     font.setPointSize(16);
     mLabel->setFont(font);
@@ -53,11 +42,9 @@ void WelcomePage::initializePage()
                        "<p>You can skip any step and configure it later from System Settings. Alternatively, you can start this wizard again "
                        "from Application Launcher.</p>"));
     mLabel->nativeWidget()->setWordWrap(true);
+    layout->addItem(mLabel);
 }
 
-QGraphicsLayoutItem* WelcomePage::rootWidget() const
+WelcomePage::~WelcomePage()
 {
-    return mLabel;
 }
-
-

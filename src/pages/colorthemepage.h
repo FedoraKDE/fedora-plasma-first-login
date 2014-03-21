@@ -33,18 +33,16 @@ class Animation;
 class ColorThemePage : public Page
 {
     Q_OBJECT
+    Q_CLASSINFO("Title", I18N("Color Theme"))
 
   public:
-    ColorThemePage(QWidget* parent);
+    ColorThemePage();
     ~ColorThemePage();
-
-    void initializePage();
-    QGraphicsLayoutItem* rootWidget() const;
 
     void commitChanges();
 
   protected:
-    void resizeEvent(QResizeEvent* event);
+    void resizeEvent(QGraphicsSceneResizeEvent* event);
 
   private Q_SLOTS:
     void onMouseEnteredButton();
@@ -52,7 +50,6 @@ class ColorThemePage : public Page
     void updatePixmap();
 
   private:
-    QGraphicsWidget* mRootWidget;
     Plasma::Label* mImageView;
     QPixmap mLight;
     QPixmap mDark;

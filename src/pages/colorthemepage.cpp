@@ -31,19 +31,17 @@
 #include <Plasma/Animation>
 
 #include <QLabel>
-#include <QResizeEvent>
 #include <QButtonGroup>
 #include <QGraphicsLinearLayout>
+#include <QGraphicsSceneResizeEvent>
 #include <QDebug>
 #include <QTimer>
 
-ColorThemePage::ColorThemePage(QWidget* parent)
-    : Page(parent)
-    , mRootWidget(0)
+ColorThemePage::ColorThemePage()
+    : Page()
     , mAnimation(Plasma::Animator::create(Plasma::Animator::PixmapTransitionAnimation, this))
     , mAnimationTimer(new QTimer(this))
 {
-    setTitle(i18nc("@title:tab", "Color Theme"));
     mAnimation->setLoopCount(1);
     mAnimation->setProperty("duration", 300);
     mAnimation->setProperty("usesCache", true);
@@ -56,17 +54,16 @@ ColorThemePage::ColorThemePage(QWidget* parent)
     mLight = QPixmap(KGlobal::dirs()->findResource("data", QLatin1String("fedora-plasma-first-login/theme-light.png")));
     mDark =  QPixmap(KGlobal::dirs()->findResource("data", QLatin1String("fedora-plasma-first-login/theme-dark.png")));
 
-    mRootWidget = new QGraphicsWidget;
     QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->setSpacing(10);
-    mRootWidget->setLayout(layout);
+    setLayout(layout);
 
-    Plasma::Label* label = new Plasma::Label(mRootWidget);
+    Plasma::Label* label = new Plasma::Label(this);
     label->setText(i18n("<p>Select your prefered Plasma and color scheme using the buttons below.</p>"
                         "<p>The preview image will adjust accordingly as you hover over those buttons.</p>"));
     layout->addItem(label);
 
-    mImageView = new Plasma::Label(mRootWidget);
+    mImageView = new Plasma::Label(this);
     mImageView->nativeWidget()->setPixmap(mLight.scaled(500, 312 , Qt::KeepAspectRatio, Qt::SmoothTransformation));
     //mImageView->setScaledContents(true);
     layout->addItem(mImageView);
@@ -75,7 +72,7 @@ ColorThemePage::ColorThemePage(QWidget* parent)
 
     QGraphicsLinearLayout* buttonsLayout = new QGraphicsLinearLayout(Qt::Horizontal);
     KIcon icon(KGlobal::dirs()->findResource("data", QLatin1String("fedora-plasma-first-login/theme-light-btn.png")));
-    mLightButton = new HoverButton(mRootWidget);
+    mLightButton = new HoverButton(this);
     mLightButton->setIcon(icon);
     mLightButton->setText(i18nc("@title:button", "Light Theme"));
     mLightButton->nativeWidget()->setAutoExclusive(true);
@@ -87,7 +84,7 @@ ColorThemePage::ColorThemePage(QWidget* parent)
     buttonGroup->addButton(mLightButton->nativeWidget());
 
     icon = KIcon(KGlobal::dirs()->findResource("data", QLatin1String("fedora-plasma-first-login/theme-dark-btn.png")));
-    mDarkButton = new HoverButton(mRootWidget);
+    mDarkButton = new HoverButton(this);
     mDarkButton->setIcon(icon);
     mDarkButton->setText(i18nc("@title:button", "Dark Theme"));
     mDarkButton->nativeWidget()->setAutoExclusive(true);
@@ -101,16 +98,6 @@ ColorThemePage::ColorThemePage(QWidget* parent)
 
 ColorThemePage::~ColorThemePage()
 {
-    delete mRootWidget;
-}
-
-void ColorThemePage::initializePage()
-{
-}
-
-QGraphicsLayoutItem* ColorThemePage::rootWidget() const
-{
-    return mRootWidget;
 }
 
 void ColorThemePage::commitChanges()
@@ -119,12 +106,12 @@ void ColorThemePage::commitChanges()
     // TODO save the changes
 }
 
-void ColorThemePage::resizeEvent(QResizeEvent* event)
+void ColorThemePage::resizeEvent(QGraphicsSceneResizeEvent* event)
 {
     qDebug() << "resize event";
-    QWidget::resizeEvent(event);
+    Page::resizeEvent(event);
 
-    mImageView->nativeWidget()->setPixmap(mLight.scaled(event->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    mImageView->nativeWidget()->setPixmap(mLight.scaled(event->newSize().toSize(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void ColorThemePage::onMouseEnteredButton()

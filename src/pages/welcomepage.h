@@ -29,14 +29,11 @@ class Label;
 class WelcomePage : public Page
 {
     Q_OBJECT
+    Q_CLASSINFO("Title", I18N("Welcome"))
 
   public:
-    WelcomePage(QWidget* parent = 0);
+    WelcomePage();
     ~WelcomePage();
-
-    void initializePage();
-
-    QGraphicsLayoutItem* rootWidget() const;
 
   private:
     Plasma::Label* mLabel;

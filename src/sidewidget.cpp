@@ -32,16 +32,13 @@
 
 const static int SideBarWidth = 200;
 
-SideWidget::SideWidget(Wizard* wizard, QGraphicsWidget* parent)
+SideWidget::SideWidget(QGraphicsWidget* parent)
     : Plasma::Frame(parent)
-    , mWizard(wizard)
     , mTitlesLayout(0)
     , mActivePage(-1)
 {
-    connect(mWizard, SIGNAL(currentIdChanged(int)),
+    connect(Wizard::instance(), SIGNAL(currentPageChanged(int)),
             this, SLOT(onPageChanged(int)));
-    connect(mWizard, SIGNAL(pageAdded(int)),
-            this, SLOT(onPageAdded(int)));
 
     setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
     setMaximumWidth(SideBarWidth);
@@ -64,18 +61,16 @@ SideWidget::SideWidget(Wizard* wizard, QGraphicsWidget* parent)
     frameLayout->addItem(mTitlesLayout);
 
     frameLayout->addStretch(2);
+
+    for (int i = 0; i < Wizard::instance()->count(); ++i) {
+        SideWidgetPageLabel* label = new SideWidgetPageLabel(Wizard::instance()->pageTitle(i), i, this);
+        mTitleLabels.insert(i, label);
+        mTitlesLayout->addItem(label);
+    }
 }
 
 SideWidget::~SideWidget()
 {
-}
-
-void SideWidget::onPageAdded(int id)
-{
-    QWizardPage *page = mWizard->page(id);
-    SideWidgetPageLabel* label = new SideWidgetPageLabel(page->title(), id, this);
-    mTitleLabels.insert(id, label);
-    mTitlesLayout->addItem(label);
 }
 
 void SideWidget::onPageChanged(int id)

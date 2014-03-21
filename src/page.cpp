@@ -19,13 +19,26 @@
 
 #include "page.h"
 
-Page::Page(QWidget* parent)
-    : QWizardPage(parent)
+#include <QMetaClassInfo>
+
+#include <KLocalizedString>
+
+Page::Page()
+    : QGraphicsWidget()
 {
 }
 
 Page::~Page()
 {
+}
+
+void Page::initializePage()
+{
+}
+
+bool Page::isComplete() const
+{
+    return true;
 }
 
 void Page::commitChanges()
@@ -35,4 +48,9 @@ void Page::commitChanges()
 bool Page::shouldSkip() const
 {
     return false;
+}
+
+QString Page::title() const
+{
+    return i18n(metaObject()->classInfo(metaObject()->indexOfClassInfo("Title")).value());
 }
