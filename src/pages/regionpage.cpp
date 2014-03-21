@@ -21,7 +21,6 @@
 #include "regionpage.h"
 
 #include <QGraphicsWidget>
-#include <QDebug>
 #include <QGraphicsLinearLayout>
 #include <QStringListModel>
 #include <QStandardItemModel>
@@ -31,6 +30,8 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KStandardDirs>
+#include <KToolInvocation>
+#include <KDebug>
 
 #include <Plasma/Label>
 #include <Plasma/TreeView>
@@ -102,7 +103,7 @@ void RegionPage::commitChanges()
     }
 
     const QString country = currentIndex.data(Qt::UserRole + 1).toString();
-    qDebug() << "setting country to" << country;
+    kDebug() << "setting country to" << country;
     KGlobal::locale()->setCountry(country, 0); // FIXME actually apply the country globally at some point
 }
 
@@ -113,5 +114,5 @@ QGraphicsLayoutItem* RegionPage::rootWidget() const
 
 void RegionPage::slotDateTimeSettings()
 {
-    QProcess::startDetached(QLatin1String("kcmshell4 clock"));
+    KToolInvocation::startServiceByDesktopName(QLatin1String("clock"));
 }

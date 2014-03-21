@@ -23,6 +23,7 @@
 #include <KGlobal>
 #include <KStandardDirs>
 #include <KToolInvocation>
+#include <KDebug>
 
 #include <QGraphicsLinearLayout>
 #include <QStandardItemModel>
@@ -34,8 +35,6 @@
 
 #include <PackageKit/packagekit-qt2/Daemon>
 #include <PackageKit/packagekit-qt2/Transaction>
-
-#include <QDebug>
 
 LanguagePage::LanguagePage(QWidget* parent)
     : WizardPage(parent)
