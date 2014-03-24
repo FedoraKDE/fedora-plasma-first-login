@@ -21,6 +21,7 @@
 #include <KApplication>
 #include <KLocalizedString>
 #include <KCmdLineArgs>
+#include <KIcon>
 
 #include "view.h"
 
@@ -39,7 +40,7 @@ int main(int argc, char **argv)
     KCmdLineArgs::init(argc, argv, &about);
 
     KApplication app;
-    app.setWindowIcon(QIcon(QLatin1String("/usr/share/pixmaps/fedora-logo-sprite.png")));
+    app.setWindowIcon(KIcon(QLatin1String("start-here-kde-fedora")));
 
     View view;
     view.resize(800, 600);
