@@ -25,7 +25,6 @@
 #include <QStringListModel>
 #include <QStandardItemModel>
 #include <QTreeView>
-#include <QProcess>
 
 #include <KGlobal>
 #include <KLocale>
