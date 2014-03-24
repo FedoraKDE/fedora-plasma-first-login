@@ -123,7 +123,11 @@ void Applet::init()
 
 void Applet::wizardPageChanged(int id)
 {
-    mNextButton->setEnabled(!Wizard::instance()->isLastPage());
+    if (Wizard::instance()->isLastPage()) {
+        mNextButton->setText(i18n("&Finish"));
+    } else {
+        mNextButton->setText(i18n("&Next"));
+    }
     mPrevButton->setEnabled(id > 0);
 
 

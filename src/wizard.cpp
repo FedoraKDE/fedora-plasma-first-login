@@ -24,6 +24,7 @@
 #include <QTimer>
 #include <QMetaClassInfo>
 
+#include <KApplication>
 #include <KLocalizedString>
 
 Wizard* Wizard::sInstance = 0;
@@ -119,12 +120,15 @@ QString Wizard::pageTitle(int id) const
 
 void Wizard::next()
 {
+    Page* page = currentPage();
+    if (page->isComplete()) {
+        page->commitChanges();
+    }
+
     if (!isLastPage()) {
-        Page* page = currentPage();
-        if (page->isComplete()) {
-            page->commitChanges();
-        }
         setCurrentPage(mCurrentPageId + 1);
+    } else {
+        kapp->quit(); // TODO display some dialog box
     }
 }
 
@@ -134,4 +138,3 @@ void Wizard::previous()
         setCurrentPage(mCurrentPageId - 1);
     }
 }
-
