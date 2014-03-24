@@ -39,6 +39,7 @@ int main(int argc, char **argv)
     KCmdLineArgs::init(argc, argv, &about);
 
     KApplication app;
+    app.setWindowIcon(QIcon(QLatin1String("/usr/share/pixmaps/fedora-logo-sprite.png")));
 
     View view;
     view.resize(800, 600);

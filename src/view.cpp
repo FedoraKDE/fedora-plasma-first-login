@@ -33,6 +33,7 @@ View::View(QWidget* parent)
 {
     setTrackContainmentChanges(true);
     setWallpaperEnabled(true);
+    setWindowTitle(i18n("Fedora Plasma first login wizard"));
 
     setScene(&mCorona);
     setContainment(mCorona.addContainment(QLatin1String("image"), QVariantList()));
