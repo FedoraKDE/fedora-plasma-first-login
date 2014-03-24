@@ -46,8 +46,8 @@ class Wizard : public QObject
     template<typename T>
     int registerPage()
     {
-        MetaPage metaPage = { .metaType = QMetaTypeId2<T>::qt_metatype_id(),
-                              .metaObject = &T::staticMetaObject };
+        MetaPage metaPage = { QMetaTypeId2<T>::qt_metatype_id(),
+                              &T::staticMetaObject };
         mMetaPages.append(metaPage);
         return mMetaPages.count() - 1;
     }
@@ -74,7 +74,6 @@ class Wizard : public QObject
 
   private:
     Wizard(QObject *parent = 0);
-    //int registerPageImpl(int typeId, const QMetaObject *metaObj);
 
   private:
     int mCurrentPageId;
