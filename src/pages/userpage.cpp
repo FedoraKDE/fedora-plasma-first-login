@@ -22,13 +22,13 @@
 
 #include <QGraphicsWidget>
 #include <QGraphicsGridLayout>
+#include <QDir>
 
 #include <KGlobal>
 #include <KLocale>
 #include <KStandardDirs>
 #include <KToolInvocation>
 #include <KDebug>
-#include <KApplication>
 
 #include <Plasma/Label>
 #include <Plasma/PushButton>
@@ -43,20 +43,18 @@ UserPage::UserPage()
 {
     m_email.setProfile(m_email.defaultProfileName());
 
-    qDebug() << "Loading user details:";
-    qDebug() << "UID:" << m_user.uid();
-    qDebug() << "Face:" << m_user.faceIconPath();
+    //qDebug() << "Loading user details:";
+    //qDebug() << "UID:" << m_user.uid();
 
     QGraphicsGridLayout* layout = new QGraphicsGridLayout;
     //layout->setSpacing(10);
-    //layout->setColumnStretchFactor(1, 1);
 
     Plasma::Label* label = new Plasma::Label(this);
     label->setText(i18n("<p>Customize your user details below.</p>"));
     layout->addItem(label, 0, 0, 1, 2);
 
     m_avatarBtn = new Plasma::PushButton(this);
-    m_avatarBtn->setIcon(KIcon(m_user.faceIconPath()));
+    m_avatarBtn->setIcon(QIcon(m_user.faceIconPath()));
     m_avatarBtn->setToolTip(i18n("Click this button to change your user picture."));
     m_avatarBtn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_avatarBtn->setMinimumSize(QSize(74,74));
@@ -109,14 +107,16 @@ void UserPage::initializePage()
 
 void UserPage::commitChanges()
 {
+    // TODO
 }
 
 void UserPage::changeAvatar()
 {
     ChFaceDlg * dlg = new ChFaceDlg(0);
     if (dlg->exec() == QDialog::Accepted) {
-        m_avatarBtn->setIcon(QIcon(dlg->getFaceImage()));
+        m_avatarBtn->setIcon(dlg->faceImage());
     }
+    delete dlg;
 }
 
 void UserPage::changePassword()

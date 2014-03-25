@@ -1,6 +1,7 @@
 /**
  *  Copyright 2003 Braden MacDonald <bradenm_k@shaw.ca>
  *  Copyright 2003 Ravikiran Rajagopal <ravi@ee.eng.ohio-state.edu>
+ *  Copyright 2014 Lukáš Tinkl <ltinkl@redhat.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -43,7 +44,7 @@ public:
     /**
      * Will return the currently selected face, or a null pixmap if the user hit the "remove image" button
     */
-    QPixmap getFaceImage() const
+    QPixmap faceImage() const
     {
         if(ui.m_FacesWidget->currentItem())
             return ui.m_FacesWidget->currentItem()->icon().pixmap(64);
@@ -58,9 +59,11 @@ private Q_SLOTS:
     void slotGetCustomImage();
     void slotRemoveImage();
 
+    void slotOk();
+
 private:
     void addCustomPixmap( const QString &imPath, bool saveCopy );
-    QString m_faceDir;
+    QStringList m_faceDirs;
     Ui::faceDlg ui;
 };
 
