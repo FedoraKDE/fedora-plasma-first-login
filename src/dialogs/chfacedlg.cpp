@@ -25,20 +25,17 @@
 
 #include "chfacedlg.h"
 
-#include <QLayout>
-#include <QLabel>
 #include <QImage>
-#include <QPushButton>
 #include <QDir>
 #include <QCheckBox>
 #include <QFileInfo>
 #include <QDebug>
 
-#include <klocale.h>
-#include <kfiledialog.h>
-#include <kimageio.h>
-#include <kmessagebox.h>
-#include <kurl.h>
+#include <KLocalizedString>
+#include <KFileDialog>
+#include <KImageIO>
+#include <KMessageBox>
+#include <KUrl>
 #include <KStandardDirs>
 #include <KGlobalSettings>
 
@@ -131,7 +128,7 @@ void ChFaceDlg::slotGetCustomImage()
 
     dlg.setOperationMode( KFileDialog::Opening );
     dlg.setCaption( i18nc("@title:window", "Choose Image") );
-    dlg.setMode( KFile::File | KFile::LocalOnly );
+    dlg.setMode(KFile::File | KFile::LocalOnly | KFile::ExistingOnly);
 
     if (dlg.exec() == QDialog::Accepted)
         addCustomPixmap( dlg.selectedFile(), checkWidget->isChecked() );

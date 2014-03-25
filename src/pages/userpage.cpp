@@ -67,15 +67,15 @@ UserPage::UserPage()
     label3->setText(i18n("Full name:"));
     layout->addItem(label3, 2, 0, Qt::AlignLeft | Qt::AlignTop);
 
-    Plasma::LineEdit * leFullname = new Plasma::LineEdit(this);
-    leFullname->setText(m_user.property(KUser::FullName).toString());
+    leFullname = new Plasma::LineEdit(this);
+    leFullname->setText(fullUserName());
     layout->addItem(leFullname, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     Plasma::Label* label4 = new Plasma::Label(this);
     label4->setText(i18n("Organization:"));
     layout->addItem(label4, 3, 0, Qt::AlignLeft | Qt::AlignTop);
 
-    Plasma::LineEdit * leOrg = new Plasma::LineEdit(this);
+    leOrg = new Plasma::LineEdit(this);
     leOrg->setText(m_email.getSetting(KEMailSettings::Organization));
     layout->addItem(leOrg, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
@@ -83,7 +83,7 @@ UserPage::UserPage()
     label5->setText(i18n("Email:"));
     layout->addItem(label5, 4, 0, Qt::AlignLeft | Qt::AlignTop);
 
-    Plasma::LineEdit * leEmail = new Plasma::LineEdit(this);
+    leEmail = new Plasma::LineEdit(this);
     leEmail->setText(m_email.getSetting(KEMailSettings::EmailAddress));
     layout->addItem(leEmail, 4, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
@@ -107,7 +107,21 @@ void UserPage::initializePage()
 
 void UserPage::commitChanges()
 {
-    // TODO
+    // TODO use "chfn -f" to also store the full name?
+    m_email.setSetting(KEMailSettings::RealName, leFullname->text());
+    m_email.setSetting(KEMailSettings::Organization, leOrg->text());
+    m_email.setSetting(KEMailSettings::EmailAddress, leEmail->text());
+}
+
+QString UserPage::fullUserName() const
+{
+    // 1st try KEMailSettings, then KUser
+    QString result = m_email.getSetting(KEMailSettings::RealName);
+    if (result.isEmpty()) {
+        result = m_user.property(KUser::FullName).toString();
+    }
+
+    return result;
 }
 
 void UserPage::changeAvatar()

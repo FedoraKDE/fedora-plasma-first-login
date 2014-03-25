@@ -28,6 +28,7 @@
 namespace Plasma {
 class TreeView;
 class PushButton;
+class LineEdit;
 }
 
 class QGraphicsWidget;
@@ -44,11 +45,16 @@ class UserPage : public Page
     void initializePage();
     void commitChanges();
 
+    QString fullUserName() const;
+
   private Q_SLOTS:
     void changeAvatar();
     void changePassword();
 
   private:
+    Plasma::LineEdit * leFullname;
+    Plasma::LineEdit * leOrg;
+    Plasma::LineEdit * leEmail;
     Plasma::PushButton* m_avatarBtn;
     KUser m_user;
     KEMailSettings m_email;
