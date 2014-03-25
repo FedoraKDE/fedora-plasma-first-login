@@ -18,6 +18,7 @@ set(FPFL_pages
     pages/regionpage.cpp
     pages/colorthemepage.cpp
     pages/userpage.cpp
+    pages/networkpage.cpp
 )
 
 set(FPFL_dialogs
@@ -37,6 +38,7 @@ kde4_add_executable(fedora-plasma-first-login
 target_link_libraries(fedora-plasma-first-login
                     ${QT_QTCORE_LIBRARY}
                     ${QT_QTGUI_LIBRARY}
+                    ${QT_QTDECLARATIVE_LIBRARY}
                     ${KDE4_KDECORE_LIBRARY}
                     ${KDE4_KIO_LIBRARY}
                     ${KDE4_PLASMA_LIBRARY}

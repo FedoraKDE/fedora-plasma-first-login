@@ -28,6 +28,7 @@
 #include "pages/regionpage.h"
 #include "pages/languagepage.h"
 #include "pages/userpage.h"
+#include "pages/networkpage.h"
 
 #include <QGraphicsLinearLayout>
 #include <QLabel>
@@ -47,6 +48,7 @@ WIZARD_REGISTER_PAGE_TYPE(LanguagePage)
 WIZARD_REGISTER_PAGE_TYPE(RegionPage)
 WIZARD_REGISTER_PAGE_TYPE(ColorThemePage)
 WIZARD_REGISTER_PAGE_TYPE(UserPage)
+WIZARD_REGISTER_PAGE_TYPE(NetworkPage)
 
 Applet::Applet(QGraphicsItem* parent)
     : Plasma::Applet(parent, QString(), -1)
