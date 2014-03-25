@@ -28,8 +28,6 @@
 #include <KGlobal>
 #include <KStandardDirs>
 
-#include <QDebug>
-
 NetworkPage::NetworkPage()
     : Page()
     , m_view(new QDeclarativeView())
