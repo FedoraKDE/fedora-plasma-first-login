@@ -46,3 +46,4 @@ target_link_libraries(fedora-plasma-first-login
 )
 
 install(TARGETS fedora-plasma-first-login ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(DIRECTORY qml/ DESTINATION ${DATA_INSTALL_DIR}/fedora-plasma-first-login/qml)
