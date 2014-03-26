@@ -69,7 +69,7 @@ PlasmaComponents.ListItem {
             anchors {
                 left: connectionSvgIcon.right;
                 leftMargin: padding.margins.left;
-                right: buttonRow.left;
+                right: stateChangeButton.left;
                 top: parent.top;
                 topMargin: 0;
             }
@@ -86,7 +86,7 @@ PlasmaComponents.ListItem {
             anchors {
                 left: connectionSvgIcon.right;
                 leftMargin: padding.margins.left;
-                right: buttonRow.left;
+                right: stateChangeButton.left;
                 top: connectionNameLabel.bottom;
             }
 
