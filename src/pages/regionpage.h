@@ -24,6 +24,7 @@
 
 namespace Plasma {
 class TreeView;
+class Label;
 }
 
 class QGraphicsWidget;
@@ -44,6 +45,8 @@ class RegionPage : public Page
 
   private:
     Plasma::TreeView* mRegionsWidget;
+    Plasma::Label* m_infoLabel;
+    QString m_detectedCountry;
 };
 
 #endif // REGIONPAGE_H

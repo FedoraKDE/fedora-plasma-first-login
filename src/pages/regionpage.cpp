@@ -19,6 +19,7 @@
  */
 
 #include "regionpage.h"
+#include "wizard.h"
 
 #include <QGraphicsWidget>
 #include <QGraphicsLinearLayout>
@@ -47,6 +48,9 @@ RegionPage::RegionPage()
     label->setText(i18n("<p>Select your region below. This will apply the region's settings globally in KDE.</p>"));
     layout->addItem(label);
 
+    m_infoLabel = new Plasma::Label(this);
+    layout->addItem(m_infoLabel);
+
     mRegionsWidget = new Plasma::TreeView(this);
     mRegionsWidget->nativeWidget()->setHeaderHidden(true);
     mRegionsWidget->nativeWidget()->setRootIsDecorated(false);
@@ -66,26 +70,31 @@ RegionPage::~RegionPage()
 
 void RegionPage::initializePage()
 {
-    const QString userLang = KGlobal::locale()->language();
-    //qDebug() << "User KLocale language is" << userLang;
-    QLocale userLocale = QLocale(userLang);
-    //qDebug() << "User QLocale language is" << userLocale.nativeLanguageName();
-
-    QList<QLocale> matchingRegions = QLocale::matchingLocales(userLocale.language(), QLocale::AnyScript, QLocale::AnyCountry);
+    if (!Wizard::instance()->detectedCountry().isEmpty()) {
+        m_detectedCountry = Wizard::instance()->detectedCountry();
+        qDebug() << "detected country" << m_detectedCountry;
+    }
 
     QStandardItemModel* model = new QStandardItemModel(this);
-    Q_FOREACH (const QLocale &loc, matchingRegions) {
-        const QString countryCode = loc.name().section(QLatin1Char('_'), 1).toLower(); // cs_CZ
+    Q_FOREACH (const QString & countryCode, KGlobal::locale()->allCountriesList()) {
         const QString flag = KGlobal::dirs()->findResource("locale", QString::fromLatin1("l10n/%1/flag.png").arg(countryCode));
-        QString countryName = loc.nativeCountryName();
-        if (countryName.isEmpty())
-            countryName = KGlobal::locale()->countryCodeToName(countryCode);
-        QStandardItem* item = new QStandardItem(QIcon(flag), countryName);
+        QStandardItem* item = new QStandardItem(QIcon(flag), KGlobal::locale()->countryCodeToName(countryCode));
         item->setData(countryCode);
         model->appendRow(item);
     }
     mRegionsWidget->setModel(model);
     mRegionsWidget->nativeWidget()->sortByColumn(0, Qt::AscendingOrder);
+
+    // pre-select the auto-detected country, if available
+    if (!m_detectedCountry.isEmpty()) {
+        const QModelIndexList detectedCountryIndexes = model->match(model->index(0,0), Qt::UserRole + 1, m_detectedCountry, 1, Qt::MatchExactly);
+        if (!detectedCountryIndexes.isEmpty()) {
+            mRegionsWidget->nativeWidget()->selectionModel()->setCurrentIndex(detectedCountryIndexes.first(),
+                                                                              QItemSelectionModel::SelectCurrent);
+            m_infoLabel->setText(i18n("We have detected your country: %1",
+                                      KGlobal::locale()->countryCodeToName(m_detectedCountry)));
+        }
+    }
 }
 
 void RegionPage::commitChanges()
