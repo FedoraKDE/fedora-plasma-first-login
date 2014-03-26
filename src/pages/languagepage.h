@@ -22,7 +22,10 @@
 
 #include "../page.h"
 
+#include <Plasma/DataEngine>
+
 namespace Plasma {
+class Label;
 class TreeView;
 }
 
@@ -41,9 +44,12 @@ class LanguagePage : public Page
   private Q_SLOTS:
     void installMoreLanguages();
     void setupKeyboard();
+    void dataUpdated(const QString & source, const Plasma::DataEngine::Data & data);
 
   private:
+    Plasma::Label* m_infoLabel;
     Plasma::TreeView* mLangsWidget;
+    QString m_locationLanguage;
 };
 
 #endif // LANGUAGEPAGE_H

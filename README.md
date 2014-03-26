@@ -15,3 +15,4 @@ Runtime dependencies:
 - fedora-logos
 - kde-baseapps/kdepasswd
 - kde-workspace (date&time kcm)
+- plasma-nm

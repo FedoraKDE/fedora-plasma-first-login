@@ -32,6 +32,7 @@
 #include <Plasma/Label>
 #include <Plasma/TreeView>
 #include <Plasma/PushButton>
+#include <Plasma/DataEngineManager>
 
 #include <PackageKit/packagekit-qt2/Daemon>
 #include <PackageKit/packagekit-qt2/Transaction>
@@ -43,10 +44,16 @@ LanguagePage::LanguagePage()
     layout->setSpacing(10);
     setLayout(layout);
 
-    Plasma::Label* label = new Plasma::Label(this);
+    Plasma::DataEngine *loc = Plasma::DataEngineManager::self()->loadEngine(QLatin1String("geolocation"));
+    loc->connectSource(QLatin1String("location"), this);
+
+    Plasma::Label * label = new Plasma::Label(this);
     label->setText(i18n("<p>Select your language below. This will switch language of all KDE applications.</p>"
-                        "<p>If your language is not listed below, click on 'Install more languages' button below.</p>"));
+                          "If your language is not listed below, click on 'Install more languages' button below."));
     layout->addItem(label);
+
+    m_infoLabel = new Plasma::Label(this);
+    layout->addItem(m_infoLabel);
 
     mLangsWidget = new Plasma::TreeView(this);
     mLangsWidget->nativeWidget()->setHeaderHidden(true);
@@ -70,6 +77,7 @@ LanguagePage::LanguagePage()
 
 LanguagePage::~LanguagePage()
 {
+    Plasma::DataEngineManager::self()->unloadEngine(QLatin1String("geolocation"));
 }
 
 void LanguagePage::initializePage()
@@ -86,6 +94,15 @@ void LanguagePage::initializePage()
     }
     mLangsWidget->setModel(model);
     mLangsWidget->nativeWidget()->sortByColumn(0, Qt::AscendingOrder);
+
+    // pre-select the auto-detected language
+    const QModelIndexList detectedLangIndexes = model->match(model->index(0,0), Qt::UserRole + 1, m_locationLanguage, 1, Qt::MatchExactly);
+    if (!detectedLangIndexes.isEmpty()) {
+        mLangsWidget->nativeWidget()->selectionModel()->setCurrentIndex(detectedLangIndexes.first(),
+                                                                        QItemSelectionModel::SelectCurrent);
+        m_infoLabel->setText(i18n("We have detected your language: %1",
+                                  KGlobal::locale()->languageCodeToName(m_locationLanguage)));
+    }
 }
 
 void LanguagePage::commitChanges()
@@ -108,4 +125,20 @@ void LanguagePage::installMoreLanguages()
 void LanguagePage::setupKeyboard()
 {
     KToolInvocation::startServiceByDesktopName(QLatin1String("kcm_keyboard"));
+}
+
+void LanguagePage::dataUpdated(const QString &source, const Plasma::DataEngine::Data &data)
+{
+    if (source == QLatin1String("location")) {
+        const QString countryCode = data[QLatin1String("country code")].toString().toLower();
+        qDebug() << "country code: " << countryCode;
+        if (!countryCode.isEmpty()) {
+            QString localeConfig = KGlobal::dirs()->locate("locale", QString::fromUtf8("l10n/%1/entry.desktop").arg(countryCode));
+            KConfig cfg(localeConfig);
+            KConfigGroup cfgGroup(&cfg, "KCM Locale");
+            QStringList langs = cfgGroup.readEntry("Languages", QStringList() << QLatin1String("en_US"));
+            m_locationLanguage = langs.first();
+            qDebug() << "auto-detected language:" << m_locationLanguage;
+        }
+    }
 }
