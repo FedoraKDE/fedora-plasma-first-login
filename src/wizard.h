@@ -26,6 +26,8 @@
 #include <QMetaType>
 #include <QSet>
 
+#include <Plasma/DataEngine>
+
 #include "page.h"
 
 class Page;
@@ -60,6 +62,9 @@ class Wizard : public QObject
     int count() const;
     QString pageTitle(int id) const;
 
+    QStringList detectedLanguages() const;
+    QString detectedCountry() const;
+
   public Q_SLOTS:
     void next();
     void previous();
@@ -71,18 +76,21 @@ class Wizard : public QObject
   private Q_SLOTS:
     void preparePendingPages();
     void preparePage(int id);
+    void dataUpdated(const QString & source, const Plasma::DataEngine::Data & data);
+    void init();
 
   private:
     Wizard(QObject *parent = 0);
 
-  private:
     int mCurrentPageId;
-
 
     QVector<MetaPage> mMetaPages;
     QMap<int, Page*> mPages;
     QSet<int> mPendingPages;
     QSet<int> mInitializedPages;
+
+    QStringList m_detectedLanguages;
+    QString m_detectedCountry;
 
     static Wizard* sInstance;
 };

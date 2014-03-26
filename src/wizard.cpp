@@ -20,12 +20,16 @@
 #include "wizard.h"
 #include "page.h"
 
-#include <KDebug>
 #include <QTimer>
 #include <QMetaClassInfo>
 
+#include <KDebug>
 #include <KApplication>
 #include <KLocalizedString>
+#include <KGlobal>
+#include <KStandardDirs>
+
+#include <Plasma/DataEngineManager>
 
 Wizard* Wizard::sInstance = 0;
 
@@ -33,6 +37,7 @@ Wizard::Wizard(QObject* parent)
     : QObject (parent)
     , mCurrentPageId(-1)
 {
+    QTimer::singleShot(0, this, SLOT(init()));
 }
 
 Wizard* Wizard::instance()
@@ -45,6 +50,13 @@ Wizard* Wizard::instance()
 
 Wizard::~Wizard()
 {
+    Plasma::DataEngineManager::self()->unloadEngine(QLatin1String("geolocation"));
+}
+
+void Wizard::init()
+{
+    Plasma::DataEngine *loc = Plasma::DataEngineManager::self()->loadEngine(QLatin1String("geolocation"));
+    loc->connectSource(QLatin1String("location"), this);
 }
 
 void Wizard::setCurrentPage(int id)
@@ -86,6 +98,21 @@ void Wizard::preparePage(int id)
     mPendingPages.remove(id);
 }
 
+void Wizard::dataUpdated(const QString &source, const Plasma::DataEngine::Data &data)
+{
+    if (source == QLatin1String("location")) {
+        const QString countryCode = data[QLatin1String("country code")].toString().toLower();
+        qDebug() << "country code: " << countryCode;
+        if (!countryCode.isEmpty()) {
+            m_detectedCountry = countryCode;
+            QString localeConfig = KGlobal::dirs()->locate("locale", QString::fromUtf8("l10n/%1/entry.desktop").arg(m_detectedCountry));
+            KConfig cfg(localeConfig);
+            KConfigGroup cfgGroup(&cfg, "KCM Locale");
+            m_detectedLanguages = cfgGroup.readEntry("Languages", QStringList());
+            qDebug() << "auto-detected languages:" << m_detectedLanguages;
+        }
+    }
+}
 
 int Wizard::currentPageId() const
 {
@@ -116,6 +143,16 @@ QString Wizard::pageTitle(int id) const
     const QMetaObject* metaObject = mMetaPages[id].metaObject;
     const int offset = metaObject->indexOfClassInfo("Title");
     return i18n(metaObject->classInfo(offset).value());
+}
+
+QStringList Wizard::detectedLanguages() const
+{
+    return m_detectedLanguages;
+}
+
+QString Wizard::detectedCountry() const
+{
+    return m_detectedCountry;
 }
 
 void Wizard::next()
