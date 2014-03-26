@@ -40,7 +40,6 @@ class LanguagePage : public Page
     void commitChanges();
 
   private Q_SLOTS:
-    void installMoreLanguages();
     void setupKeyboard();
 
   private:

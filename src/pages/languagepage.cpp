@@ -29,6 +29,7 @@
 #include <QGraphicsLinearLayout>
 #include <QStandardItemModel>
 #include <QTreeView>
+#include <QLabel>
 
 #include <Plasma/Label>
 #include <Plasma/TreeView>
@@ -45,24 +46,18 @@ LanguagePage::LanguagePage()
     setLayout(layout);
 
     Plasma::Label * label = new Plasma::Label(this);
-    label->setText(i18n("<p>Select your language below. This will switch language of all KDE applications.</p>"
-                          "If your language is not listed below, click on 'Install more languages' button below."));
+    label->setText(i18n("Select your language below. This will switch language of all KDE applications.<br>"
+                        "If your language is not currently available, it will be automatically installed later."));
     layout->addItem(label);
 
     m_infoLabel = new Plasma::Label(this);
     layout->addItem(m_infoLabel);
+    m_infoLabel->nativeWidget()->setHidden(true);
 
     mLangsWidget = new Plasma::TreeView(this);
     mLangsWidget->nativeWidget()->setHeaderHidden(true);
     mLangsWidget->nativeWidget()->setRootIsDecorated(false);
     layout->addItem(mLangsWidget);
-
-    Plasma::PushButton* button = new Plasma::PushButton(this);
-    button->setText(i18nc("@action:button", "Install more &languages..."));
-    button->setIcon(KIcon(QLatin1String("run-build-install")));
-    connect(button, SIGNAL(clicked()),
-            this, SLOT(installMoreLanguages()));
-    layout->addItem(button);
 
     Plasma::PushButton* kbdBtn = new Plasma::PushButton(this);
     kbdBtn->setText(i18nc("@action:button", "Setup &keyboard..."));
@@ -84,12 +79,8 @@ void LanguagePage::initializePage()
     }
 
     QStandardItemModel* model = new QStandardItemModel(this);
-    Q_FOREACH (const QString& language, KGlobal::locale()->installedLanguages()) {
-        QLocale loc(language);
-        QString langName = loc.nativeLanguageName();
-        if (langName.isEmpty())
-            langName = KGlobal::locale()->languageCodeToName(language);
-        QStandardItem* item = new QStandardItem(langName);
+    Q_FOREACH (const QString& language, KGlobal::locale()->allLanguagesList()) {
+        QStandardItem* item = new QStandardItem(KGlobal::locale()->languageCodeToName(language));
         item->setData(language);
         model->appendRow(item);
     }
@@ -104,6 +95,7 @@ void LanguagePage::initializePage()
                                                                             QItemSelectionModel::SelectCurrent);
             m_infoLabel->setText(i18n("We have detected your language: %1",
                                       KGlobal::locale()->languageCodeToName(m_locationLanguage)));
+            m_infoLabel->nativeWidget()->setShown(true);
         }
     }
 }
@@ -118,11 +110,10 @@ void LanguagePage::commitChanges()
     const QString lang = currentIndex.data(Qt::UserRole + 1).toString();
     kDebug() << "setting language to" << lang;
     KGlobal::locale()->setLanguage(lang, 0); // FIXME actually apply the language globally at some point
-}
 
-void LanguagePage::installMoreLanguages()
-{
-    // TODO call initializePage() after the additional languages have been installed
+    if (KGlobal::locale()->installedLanguages().contains(lang)) {
+        // TODO install the language using PackageKit-qt!
+    }
 }
 
 void LanguagePage::setupKeyboard()
