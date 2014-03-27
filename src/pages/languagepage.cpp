@@ -47,9 +47,9 @@ LanguagePage::LanguagePage()
     setLayout(layout);
 
     Plasma::Label * label = new Plasma::Label(this);
-    label->setText(i18n("<p>Select your language below. This will switch language of all KDE applications.<br>"
-                        "If your language is not currently available, it will be automatically installed later on.</p>"
-                        "<p><em>Note:</em> If your language is auto-detected, it will be placed first in the list and preselected.</p>"));
+    label->setText(i18n("Select your language below. This will switch language of all KDE applications.<br>"
+                        "If your language is not currently available, it will be automatically installed later on.<br><br>"
+                        "<em>Note:</em> If your language is auto-detected, it will be placed first in the list and preselected."));
     layout->addItem(label);
 
     mLangsWidget = new Plasma::TreeView(this);

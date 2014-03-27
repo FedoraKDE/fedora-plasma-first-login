@@ -44,8 +44,8 @@ RegionPage::RegionPage()
     setLayout(layout);
 
     Plasma::Label* label = new Plasma::Label(this);
-    label->setText(i18n("<p>Select your region below. This will apply the region's settings globally in KDE.</p>"
-                        "<p><em>Note:</em> If your country is auto-detected, it will be preselected.</p>"));
+    label->setText(i18n("Select your region below. This will apply the region's settings globally in KDE.<br><br>"
+                        "<em>Note:</em> If your country is auto-detected, it will be preselected."));
     layout->addItem(label);
 
     mRegionsWidget = new Plasma::TreeView(this);

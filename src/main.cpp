@@ -41,6 +41,8 @@ int main(int argc, char **argv)
 
     KApplication app;
     app.setWindowIcon(KIcon(QLatin1String("start-here-kde-fedora")));
+    app.setOrganizationName(QLatin1String("Fedora Plasma"));
+    app.setOrganizationDomain(QLatin1String("org.fedoraproject.kde"));
 
     View view;
     view.resize(800, 600);
