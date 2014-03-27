@@ -23,7 +23,6 @@
 #include "../page.h"
 
 namespace Plasma {
-class Label;
 class TreeView;
 }
 
@@ -43,9 +42,9 @@ class LanguagePage : public Page
     void setupKeyboard();
 
   private:
-    Plasma::Label* m_infoLabel;
     Plasma::TreeView* mLangsWidget;
     QString m_locationLanguage;
+    QStringList m_detectedLanguages;
 };
 
 #endif // LANGUAGEPAGE_H

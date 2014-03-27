@@ -101,9 +101,10 @@ void Wizard::preparePage(int id)
 void Wizard::dataUpdated(const QString &source, const Plasma::DataEngine::Data &data)
 {
     if (source == QLatin1String("location")) {
-        const QString countryCode = data[QLatin1String("country code")].toString().toLower();
-        qDebug() << "country code: " << countryCode;
-        if (!countryCode.isEmpty()) {
+        const QString country = data[QLatin1String("country")].toString().toLower(); // i18n("Svizzera")  // TEST
+        const QString countryCode = data[QLatin1String("country code")].toString().toLower(); // QLatin1String("ch"); // TEST
+        if (!country.isEmpty()) {
+            qDebug() << "detected country code: " << countryCode;
             m_detectedCountry = countryCode;
             QString localeConfig = KGlobal::dirs()->locate("locale", QString::fromUtf8("l10n/%1/entry.desktop").arg(m_detectedCountry));
             KConfig cfg(localeConfig);

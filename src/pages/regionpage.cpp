@@ -23,7 +23,6 @@
 
 #include <QGraphicsWidget>
 #include <QGraphicsLinearLayout>
-#include <QStringListModel>
 #include <QStandardItemModel>
 #include <QTreeView>
 
@@ -45,11 +44,9 @@ RegionPage::RegionPage()
     setLayout(layout);
 
     Plasma::Label* label = new Plasma::Label(this);
-    label->setText(i18n("<p>Select your region below. This will apply the region's settings globally in KDE.</p>"));
+    label->setText(i18n("<p>Select your region below. This will apply the region's settings globally in KDE.</p>"
+                        "<p><em>Note:</em> If your country is auto-detected, it will be preselected.</p>"));
     layout->addItem(label);
-
-    m_infoLabel = new Plasma::Label(this);
-    layout->addItem(m_infoLabel);
 
     mRegionsWidget = new Plasma::TreeView(this);
     mRegionsWidget->nativeWidget()->setHeaderHidden(true);
@@ -91,8 +88,6 @@ void RegionPage::initializePage()
         if (!detectedCountryIndexes.isEmpty()) {
             mRegionsWidget->nativeWidget()->selectionModel()->setCurrentIndex(detectedCountryIndexes.first(),
                                                                               QItemSelectionModel::SelectCurrent);
-            m_infoLabel->setText(i18n("We have detected your country: %1",
-                                      KGlobal::locale()->countryCodeToName(m_detectedCountry)));
         }
     }
 }

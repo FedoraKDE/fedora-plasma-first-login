@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2014  Daniel Vrátil <dvratil@redhat.com>
+ * Copyright (C) 2014  Lukáš Tinkl <ltinkl@redhat.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,9 +28,9 @@
 #include <KDebug>
 
 #include <QGraphicsLinearLayout>
-#include <QStandardItemModel>
 #include <QTreeView>
 #include <QLabel>
+#include <QStandardItemModel>
 
 #include <Plasma/Label>
 #include <Plasma/TreeView>
@@ -46,13 +47,10 @@ LanguagePage::LanguagePage()
     setLayout(layout);
 
     Plasma::Label * label = new Plasma::Label(this);
-    label->setText(i18n("Select your language below. This will switch language of all KDE applications.<br>"
-                        "If your language is not currently available, it will be automatically installed later."));
+    label->setText(i18n("<p>Select your language below. This will switch language of all KDE applications.<br>"
+                        "If your language is not currently available, it will be automatically installed later on.</p>"
+                        "<p><em>Note:</em> If your language is auto-detected, it will be placed first in the list and preselected.</p>"));
     layout->addItem(label);
-
-    m_infoLabel = new Plasma::Label(this);
-    layout->addItem(m_infoLabel);
-    m_infoLabel->nativeWidget()->setHidden(true);
 
     mLangsWidget = new Plasma::TreeView(this);
     mLangsWidget->nativeWidget()->setHeaderHidden(true);
@@ -73,19 +71,36 @@ LanguagePage::~LanguagePage()
 
 void LanguagePage::initializePage()
 {
-    if (!Wizard::instance()->detectedLanguages().isEmpty()) {
-        m_locationLanguage = Wizard::instance()->detectedLanguages().first();
-        qDebug() << "detected language" << m_locationLanguage;
+    m_detectedLanguages = Wizard::instance()->detectedLanguages();
+
+    if (!m_detectedLanguages.isEmpty()) {
+        m_locationLanguage = m_detectedLanguages.first();
+        qDebug() << "(first) detected language" << m_locationLanguage;
     }
 
+    // insert the list of all known languages
     QStandardItemModel* model = new QStandardItemModel(this);
+    model->setColumnCount(1);
     Q_FOREACH (const QString& language, KGlobal::locale()->allLanguagesList()) {
+        if (language == QLatin1String("x-test") || m_detectedLanguages.contains(language)) // skip test and detected languages
+            continue;
         QStandardItem* item = new QStandardItem(KGlobal::locale()->languageCodeToName(language));
         item->setData(language);
         model->appendRow(item);
     }
+
     mLangsWidget->setModel(model);
-    mLangsWidget->nativeWidget()->sortByColumn(0, Qt::AscendingOrder);
+    model->sort(0);
+
+    // prepend the list of detected languages, in their order
+    QListIterator<QString> i(m_detectedLanguages);
+    i.toBack();
+    while (i.hasPrevious()) {
+        const QString language = i.previous();
+        QStandardItem* item = new QStandardItem(KGlobal::locale()->languageCodeToName(language));
+        item->setData(language);
+        model->insertRow(0, item);
+    }
 
     // pre-select the auto-detected language, if available
     if (!m_locationLanguage.isEmpty()) {
@@ -93,9 +108,6 @@ void LanguagePage::initializePage()
         if (!detectedLangIndexes.isEmpty()) {
             mLangsWidget->nativeWidget()->selectionModel()->setCurrentIndex(detectedLangIndexes.first(),
                                                                             QItemSelectionModel::SelectCurrent);
-            m_infoLabel->setText(i18n("We have detected your language: %1",
-                                      KGlobal::locale()->languageCodeToName(m_locationLanguage)));
-            m_infoLabel->nativeWidget()->setShown(true);
         }
     }
 }
