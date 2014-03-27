@@ -18,8 +18,12 @@
  */
 
 #include "sidewidgetpagelabel.h"
+#include "wizard.h"
 
-#include <QtGui/QGraphicsLinearLayout>
+#include <QGraphicsLinearLayout>
+#include <QLabel>
+#include <QDebug>
+#include <QCursor>
 
 #include <KStandardDirs>
 #include <KIconLoader>
@@ -45,15 +49,20 @@ SideWidgetPageLabel::SideWidgetPageLabel(const QString& text, int pageId, QGraph
     layout->addItem(mImage);
 
     mText = new Plasma::Label(this);
+    setText(text);
     QFont textFont = Plasma::Theme::defaultTheme()->font(Plasma::Theme::DefaultFont);
     textFont.setBold(true);
     mText->setFont(textFont);
     QPalette textPalette;
-    textPalette.setColor(QPalette::Text, QColor(Qt::black));
+    textPalette.setColor(QPalette::Text, Qt::black);
+    textPalette.setColor(QPalette::Link, Qt::black);  // FIXME has no effect on links :/
+    textPalette.setColor(QPalette::LinkVisited, Qt::black);
     mText->setPalette(textPalette);
+    mText->nativeWidget()->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
+    mText->setCursor(Qt::PointingHandCursor);
+    connect(mText->nativeWidget(), SIGNAL(linkActivated(QString)), this, SLOT(linkActivated(QString)));
     layout->addItem(mText);
 
-    setText(text);
     setState(SideWidgetPageLabel::Default);
 }
 
@@ -68,7 +77,7 @@ int SideWidgetPageLabel::pageId() const
 
 void SideWidgetPageLabel::setText(const QString& text)
 {
-    mText->setText(text);
+    mText->setText(QString::fromLatin1("<a href=\"page:%1\">").arg(mPageId) + text + QLatin1String("</a>"));
 }
 
 QString SideWidgetPageLabel::text() const
@@ -102,11 +111,15 @@ void SideWidgetPageLabel::setState(SideWidgetPageLabel::State state)
     }
 }
 
+void SideWidgetPageLabel::linkActivated(const QString &link)
+{
+    if (link.startsWith(QLatin1String("page:"))) {
+        int pageId = link.section(QLatin1Char(':'), 1).toInt();
+        Wizard::instance()->setCurrentPage(pageId);
+    }
+}
+
 SideWidgetPageLabel::State SideWidgetPageLabel::state() const
 {
     return mState;
 }
-
-
-
-

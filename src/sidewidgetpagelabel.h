@@ -49,6 +49,9 @@ class SideWidgetPageLabel : public QGraphicsWidget
     State state() const;
     void setState(State state);
 
+  private Q_SLOTS:
+    void linkActivated(const QString & link);
+
   private:
     State mState;
     int mPageId;
