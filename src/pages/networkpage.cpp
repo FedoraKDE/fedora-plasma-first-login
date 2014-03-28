@@ -55,7 +55,3 @@ NetworkPage::~NetworkPage()
 {
     delete m_view;
 }
-
-void NetworkPage::commitChanges()
-{
-}

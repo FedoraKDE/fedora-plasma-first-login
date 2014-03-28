@@ -35,10 +35,6 @@ class NetworkPage : public Page
     NetworkPage();
     ~NetworkPage();
 
-    void commitChanges();
-
-  private Q_SLOTS:
-
   private:
     QDeclarativeView* m_view;
 };
