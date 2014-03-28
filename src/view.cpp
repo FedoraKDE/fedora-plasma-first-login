@@ -32,7 +32,7 @@ View::View(QWidget* parent)
     , mApplet(0)
 {
     setTrackContainmentChanges(true);
-    setWallpaperEnabled(true);
+    setWallpaperEnabled(false); // wallpaper causes bad side effects for the navigation links :/ and look better imo w/o
     setWindowTitle(i18n("Fedora Plasma first login wizard"));
 
     setScene(&mCorona);

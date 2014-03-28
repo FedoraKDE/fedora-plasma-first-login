@@ -49,20 +49,24 @@ SideWidgetPageLabel::SideWidgetPageLabel(const QString& text, int pageId, QGraph
     layout->addItem(mImage);
 
     mText = new Plasma::Label(this);
-    setText(text);
     QFont textFont = Plasma::Theme::defaultTheme()->font(Plasma::Theme::DefaultFont);
     textFont.setBold(true);
     mText->setFont(textFont);
+
+#if 0 // BUG BUG BUG, has no effect :(
     QPalette textPalette;
     textPalette.setColor(QPalette::Text, Qt::black);
     textPalette.setColor(QPalette::Link, Qt::black);  // FIXME has no effect on links :/
     textPalette.setColor(QPalette::LinkVisited, Qt::black);
     mText->setPalette(textPalette);
-    mText->nativeWidget()->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
+#endif
+
     mText->setCursor(Qt::PointingHandCursor);
-    connect(mText->nativeWidget(), SIGNAL(linkActivated(QString)), this, SLOT(linkActivated(QString)));
+
+    connect(mText, SIGNAL(linkActivated(QString)), this, SLOT(linkActivated(QString)));
     layout->addItem(mText);
 
+    setText(text);
     setState(SideWidgetPageLabel::Default);
 }
 

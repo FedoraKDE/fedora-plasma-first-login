@@ -51,6 +51,7 @@ RegionPage::RegionPage()
     mRegionsWidget = new Plasma::TreeView(this);
     mRegionsWidget->nativeWidget()->setHeaderHidden(true);
     mRegionsWidget->nativeWidget()->setRootIsDecorated(false);
+    mRegionsWidget->nativeWidget()->setUniformRowHeights(true);
     layout->addItem(mRegionsWidget);
 
     Plasma::PushButton* langBtn = new Plasma::PushButton(this);

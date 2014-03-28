@@ -91,4 +91,3 @@ void SideWidget::onPageChanged(int id)
 
     mActivePage = id;
 }
-

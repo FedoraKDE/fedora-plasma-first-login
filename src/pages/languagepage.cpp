@@ -55,6 +55,7 @@ LanguagePage::LanguagePage()
     mLangsWidget = new Plasma::TreeView(this);
     mLangsWidget->nativeWidget()->setHeaderHidden(true);
     mLangsWidget->nativeWidget()->setRootIsDecorated(false);
+    mLangsWidget->nativeWidget()->setUniformRowHeights(true);
     layout->addItem(mLangsWidget);
 
     Plasma::PushButton* kbdBtn = new Plasma::PushButton(this);
