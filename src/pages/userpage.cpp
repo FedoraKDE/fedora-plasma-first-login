@@ -69,7 +69,7 @@ UserPage::UserPage()
     //qDebug() << "UID:" << m_user.uid();
 
     QGraphicsGridLayout* layout = new QGraphicsGridLayout;
-    //layout->setSpacing(10);
+    layout->setSpacing(10);
 
     Plasma::Label* label = new Plasma::Label(this);
     label->setText(i18n("<p>Customize your user details below.</p>"));

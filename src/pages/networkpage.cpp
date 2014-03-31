@@ -25,6 +25,8 @@
 #include <QGraphicsLinearLayout>
 #include <QGraphicsProxyWidget>
 
+#include <Plasma/Label>
+
 #include <KGlobal>
 #include <KStandardDirs>
 
@@ -38,6 +40,11 @@ NetworkPage::NetworkPage()
     QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Vertical);
     setLayout(layout);
 
+    Plasma::Label * label = new Plasma::Label(this);
+    label->setText(i18n("Below you can see the list of available networks to connect to.<br>"
+                        "If no wireless connections show up, make sure to enable the Wifi kill switch."));
+    layout->addItem(label);
+
     m_view->engine()->addImportPath(importPath);
     m_view->setSource(QUrl::fromLocalFile(KGlobal::dirs()->findResource("data", QLatin1String("fedora-plasma-first-login/qml/main.qml"))));
     m_view->setStyleSheet(QLatin1String("background: transparent"));
@@ -49,6 +56,7 @@ NetworkPage::NetworkPage()
     proxyWidget->setWidget(m_view);
 
     layout->addItem(proxyWidget);
+    layout->setStretchFactor(proxyWidget, 2);
 }
 
 NetworkPage::~NetworkPage()
