@@ -31,7 +31,7 @@ int main(int argc, char **argv)
                      "fedora-plasma-first-login",
                      ki18n("Fedora Plasma First Login Guide"),
                      QByteArray(FPFL_VERSION),
-                     ki18n("First Login wizard that will guide user through initial personalization of his profile"),
+                     ki18n("First Login wizard that will guide user through initial personalization of their profile"),
                      KAboutData::License_GPL_V2,
                      ki18n("Copyright (c) 2014 Fedora Plasma hackers"), // Copyright
                      KLocalizedString(), // Other text
