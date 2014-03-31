@@ -50,7 +50,7 @@ ChFaceDlg::ChFaceDlg(QWidget *parent)
 
     setCaption( i18nc("@title:window", "Change your Face") );
     setButtons( Ok|Cancel|User1|User2 );
-    setDefaultButton( Ok );
+    setDefaultButton( Cancel );
 
     setButtonText( User1, i18n("Custom Image...") );
     setButtonText( User2, i18n("Remove Image") );
