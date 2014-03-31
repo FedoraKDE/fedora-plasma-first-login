@@ -19,28 +19,50 @@
 
 #include "userpage.h"
 #include "dialogs/chfacedlg.h"
+#include "wizard.h"
 
 #include <QGraphicsWidget>
 #include <QGraphicsGridLayout>
 #include <QDir>
+#include <QDBusPendingReply>
 
 #include <KGlobal>
 #include <KLocale>
 #include <KStandardDirs>
 #include <KToolInvocation>
 #include <KDebug>
+#include <KLineEdit>
 
 #include <Plasma/Label>
 #include <Plasma/PushButton>
 #include <Plasma/LineEdit>
+#include <Plasma/CheckBox>
 
 #include <unistd.h>
 #include <sys/types.h>
 
 UserPage::UserPage()
     : Page(),
-      m_user(KUser(getuid()))
+      m_user(KUser(getuid())),
+      m_accountManager(QLatin1String("org.freedesktop.Accounts"),
+                       QLatin1String("/org/freedesktop/Accounts"),
+                       QLatin1String("org.freedesktop.Accounts"),
+                       QDBusConnection::systemBus(), this),
+      m_userIface(0)
 {
+    QDBusPendingReply<QDBusObjectPath> reply = m_accountManager.asyncCall(QLatin1String("FindUserById"), static_cast<qint64>(m_user.uid()));
+    reply.waitForFinished();
+    if (reply.isValid()) {
+        const QString userPath = reply.value().path();
+        qDebug() << "User DBUS path" << userPath;
+        m_userIface = new QDBusInterface(QLatin1String("org.freedesktop.Accounts"),
+                                         userPath,
+                                         QLatin1String("org.freedesktop.Accounts.User"),
+                                         QDBusConnection::systemBus(), this);
+    } else {
+        qWarning() << "Failed to find the user in the DBUS AccountService";
+    }
+
     m_email.setProfile(m_email.defaultProfileName());
 
     //qDebug() << "Loading user details:";
@@ -87,18 +109,31 @@ UserPage::UserPage()
     leEmail->setText(m_email.getSetting(KEMailSettings::EmailAddress));
     layout->addItem(leEmail, 4, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
+    m_useLocationCB = new Plasma::CheckBox(this);
+    m_useLocationCB->setText(i18n("Use the following location:"));
+    layout->addItem(m_useLocationCB, 5, 0, Qt::AlignLeft | Qt::AlignVCenter);
+
+    leLocation = new Plasma::LineEdit(this);
+    leLocation->setText(Wizard::instance()->detectedLocation());
+    leLocation->setEnabled(false);
+    connect(m_useLocationCB, SIGNAL(toggled(bool)),
+            leLocation->nativeWidget(), SLOT(setEnabled(bool)));
+    m_useLocationCB->setChecked(!leLocation->text().isEmpty());
+    layout->addItem(leLocation, 5, 1, Qt::AlignLeft | Qt::AlignVCenter);
+
     Plasma::PushButton* passBtn = new Plasma::PushButton(this);
     passBtn->setText(i18nc("@action:button", "&Change password..."));
     passBtn->setIcon(KIcon(QLatin1String("preferences-desktop-user-password")));
     passBtn->setMaximumHeight(30);
     connect(passBtn, SIGNAL(clicked()), SLOT(changePassword()));
-    layout->addItem(passBtn, 5, 0, 1, 2);
+    layout->addItem(passBtn, 6, 0, 1, 2);
 
     setLayout(layout);
 }
 
 UserPage::~UserPage()
 {
+    delete m_userIface;
 }
 
 void UserPage::initializePage()
@@ -111,6 +146,17 @@ void UserPage::commitChanges()
     m_email.setSetting(KEMailSettings::RealName, leFullname->text());
     m_email.setSetting(KEMailSettings::Organization, leOrg->text());
     m_email.setSetting(KEMailSettings::EmailAddress, leEmail->text());
+
+    // save to the AccountService
+    if (m_userIface) {
+        m_userIface->asyncCall(QLatin1String("SetRealName"), leFullname->text());
+        m_userIface->asyncCall(QLatin1String("SetEmail"), leEmail->text());
+        if (m_useLocationCB->isChecked()) {
+            m_userIface->asyncCall(QLatin1String("SetLocation"), leLocation->text());
+        }
+        //qDebug() << "user face path" << m_user.faceIconPath();
+        m_userIface->asyncCall(QLatin1String("SetIconFile"), m_user.faceIconPath());
+    }
 }
 
 QString UserPage::fullUserName() const

@@ -111,6 +111,9 @@ void Wizard::dataUpdated(const QString &source, const Plasma::DataEngine::Data &
             KConfigGroup cfgGroup(&cfg, "KCM Locale");
             m_detectedLanguages = cfgGroup.readEntry("Languages", QStringList());
             qDebug() << "auto-detected languages:" << m_detectedLanguages;
+
+            m_detectedLocation = QString::fromUtf8("%1, %2").arg(data.value(QLatin1String("city")).toString())
+                                 .arg(data.value(QLatin1String("country")).toString());
         }
     }
 }
@@ -154,6 +157,11 @@ QStringList Wizard::detectedLanguages() const
 QString Wizard::detectedCountry() const
 {
     return m_detectedCountry;
+}
+
+QString Wizard::detectedLocation() const
+{
+    return m_detectedLocation;
 }
 
 void Wizard::next()

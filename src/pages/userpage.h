@@ -22,6 +22,8 @@
 
 #include "../page.h"
 
+#include <QDBusInterface>
+
 #include <KUser>
 #include <KEMailSettings>
 
@@ -29,6 +31,7 @@ namespace Plasma {
 class TreeView;
 class PushButton;
 class LineEdit;
+class CheckBox;
 }
 
 class QGraphicsWidget;
@@ -55,9 +58,13 @@ class UserPage : public Page
     Plasma::LineEdit * leFullname;
     Plasma::LineEdit * leOrg;
     Plasma::LineEdit * leEmail;
+    Plasma::LineEdit * leLocation;
     Plasma::PushButton* m_avatarBtn;
+    Plasma::CheckBox *m_useLocationCB;
     KUser m_user;
     KEMailSettings m_email;
+    QDBusInterface m_accountManager;
+    QDBusInterface * m_userIface;
 };
 
 #endif // USERPAGE_H

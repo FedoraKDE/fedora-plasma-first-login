@@ -51,7 +51,7 @@ SideWidget::SideWidget(QGraphicsWidget* parent)
 
     Plasma::Label* label = new Plasma::Label(this);
     label->setImage(KGlobal::dirs()->findResource("xdgdata-icon", QLatin1String("hicolor/256x256/apps/fedora-logo-icon.png")));
-    label->nativeWidget()->setScaledContents(true);
+    label->setScaledContents(true);
     label->setAlignment(Qt::AlignCenter);
     label->setMaximumSize(150, 150);
     frameLayout->addItem(label);

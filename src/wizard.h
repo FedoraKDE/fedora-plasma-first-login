@@ -64,6 +64,7 @@ class Wizard : public QObject
 
     QStringList detectedLanguages() const;
     QString detectedCountry() const;
+    QString detectedLocation() const;
 
   public Q_SLOTS:
     void next();
@@ -89,8 +90,9 @@ class Wizard : public QObject
     QSet<int> mPendingPages;
     QSet<int> mInitializedPages;
 
-    QStringList m_detectedLanguages;
-    QString m_detectedCountry;
+    QStringList m_detectedLanguages; // list of lang codes
+    QString m_detectedCountry;  // country code
+    QString m_detectedLocation; // City, Country
 
     static Wizard* sInstance;
 };

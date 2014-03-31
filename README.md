@@ -13,6 +13,7 @@ This wizard will help a new Fedora Plasma user guide thru some basic setup steps
 
 Runtime dependencies:
 - fedora-logos
+- accountsservice
 - kde-baseapps/kdepasswd
 - kde-workspace (date&time kcm)
 - plasma-nm
