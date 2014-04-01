@@ -63,7 +63,7 @@ SideWidgetPageLabel::SideWidgetPageLabel(const QString& text, int pageId, QGraph
 
     mText->setCursor(Qt::PointingHandCursor);
 
-    connect(mText, SIGNAL(linkActivated(QString)), this, SLOT(linkActivated(QString)));
+    connect(mText, SIGNAL(linkActivated(QString)), SLOT(linkActivated(QString)));
     layout->addItem(mText);
 
     setText(text);
@@ -118,7 +118,7 @@ void SideWidgetPageLabel::setState(SideWidgetPageLabel::State state)
 void SideWidgetPageLabel::linkActivated(const QString &link)
 {
     if (link.startsWith(QLatin1String("page:"))) {
-        int pageId = link.section(QLatin1Char(':'), 1).toInt();
+        const int pageId = link.section(QLatin1Char(':'), 1).toInt();
         Wizard::instance()->setCurrentPage(pageId);
     }
 }

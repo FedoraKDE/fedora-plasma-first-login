@@ -61,8 +61,7 @@ LanguagePage::LanguagePage()
     Plasma::PushButton* kbdBtn = new Plasma::PushButton(this);
     kbdBtn->setText(i18nc("@action:button", "Setup &keyboard..."));
     kbdBtn->setIcon(KIcon(QLatin1String("preferences-desktop-keyboard")));
-    connect(kbdBtn, SIGNAL(clicked()),
-            this, SLOT(setupKeyboard()));
+    connect(kbdBtn, SIGNAL(clicked()), SLOT(setupKeyboard()));
     layout->addItem(kbdBtn);
 }
 

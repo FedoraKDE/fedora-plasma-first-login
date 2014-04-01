@@ -33,15 +33,12 @@
 #include <QGraphicsLinearLayout>
 #include <QLabel>
 #include <QGraphicsGridLayout>
-#include <QGraphicsSceneResizeEvent>
 
 #include <Plasma/PushButton>
 #include <Plasma/Frame>
 #include <Plasma/Label>
 #include <Plasma/Theme>
 #include <Plasma/SvgWidget>
-
-#include <KStandardDirs>
 
 WIZARD_REGISTER_PAGE_TYPE(WelcomePage)
 WIZARD_REGISTER_PAGE_TYPE(LanguagePage)
@@ -103,8 +100,8 @@ void Applet::init()
         mPrevButton = new Plasma::PushButton(this);
         mPrevButton ->setText(i18n("&Previous"));
         mPrevButton ->setMaximumHeight(30);
-        buttonsLayout->addItem(mPrevButton );
-        buttonsLayout->setAlignment(mPrevButton , Qt::AlignVCenter);
+        buttonsLayout->addItem(mPrevButton);
+        buttonsLayout->setAlignment(mPrevButton, Qt::AlignVCenter);
         connect(mPrevButton, SIGNAL(clicked()),
                 Wizard::instance(), SLOT(previous()));
 
