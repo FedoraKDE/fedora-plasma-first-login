@@ -96,7 +96,7 @@ void LanguagePage::initializePage()
     i.toBack();
     while (i.hasPrevious()) {
         const QString language = i.previous();
-        QStandardItem* item = new QStandardItem(KGlobal::locale()->languageCodeToName(language));
+        QStandardItem* item = new QStandardItem(KIcon(QLatin1String("favorites")), KGlobal::locale()->languageCodeToName(language));
         item->setData(language);
         model->insertRow(0, item);
     }
