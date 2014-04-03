@@ -74,6 +74,7 @@ void RegionPage::initializePage()
     }
 
     QStandardItemModel* model = new QStandardItemModel(this);
+    model->setColumnCount(1);
     Q_FOREACH (const QString & countryCode, KGlobal::locale()->allCountriesList()) {
         const QString flag = KGlobal::dirs()->findResource("locale", QString::fromLatin1("l10n/%1/flag.png").arg(countryCode));
         QStandardItem* item = new QStandardItem(QIcon(flag), KGlobal::locale()->countryCodeToName(countryCode));

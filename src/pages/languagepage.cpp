@@ -36,20 +36,19 @@
 #include <Plasma/TreeView>
 #include <Plasma/PushButton>
 
-#include <PackageKit/packagekit-qt2/Daemon>
-#include <PackageKit/packagekit-qt2/Transaction>
-
 LanguagePage::LanguagePage()
-    : Page()
+    : Page(),
+      m_searchTrans(0),
+      m_installTrans(0)
 {
     QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->setSpacing(10);
     setLayout(layout);
 
     Plasma::Label * label = new Plasma::Label(this);
-    label->setText(i18n("Select your language below. This will switch language of all KDE applications.<br>"
-                        "If your language is not currently available, it will be automatically installed later on.<br><br>"
-                        "<em>Note:</em> If your language is auto-detected, it will be placed first in the list and preselected."));
+    label->setText(i18n("Select your language below. This will switch language of all KDE applications.<br><br>"
+                        "<em>Note:</em> If your language is auto-detected, it will be placed first in the list and preselected."
+                        "If it's available but not installed currently, it will be automatically installed in the background."));
     layout->addItem(label);
 
     mLangsWidget = new Plasma::TreeView(this);
@@ -120,15 +119,83 @@ void LanguagePage::commitChanges()
     }
 
     const QString lang = currentIndex.data(Qt::UserRole + 1).toString();
-    kDebug() << "setting language to" << lang;
+    qDebug() << "setting language to" << lang;
     KGlobal::locale()->setLanguage(lang, 0); // FIXME actually apply the language globally at some point
 
-    if (KGlobal::locale()->installedLanguages().contains(lang)) {
-        // TODO install the language using PackageKit-qt!
+    if (!KGlobal::locale()->installedLanguages().contains(lang)) {
+        const QString pkgId = QString::fromLatin1("kde-l10n-%1").arg(lang);
+        qDebug() << "Wanting to install" << pkgId;
+        m_searchTrans = new PackageKit::Transaction(this);
+
+        connect(m_searchTrans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                this, SLOT(onPackage(PackageKit::Transaction::Info,QString,QString)));
+        connect(m_searchTrans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                this, SLOT(onSearchTransactionFinished(PackageKit::Transaction::Exit,uint)));
+        connect(m_searchTrans, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
+                this, SLOT(onItemProgress(QString,PackageKit::Transaction::Status,uint)));
+        connect(m_searchTrans, SIGNAL(message(PackageKit::Transaction::Message,QString)),
+                this, SLOT(onMessage(PackageKit::Transaction::Message,QString)));
+        connect(m_searchTrans, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+                this, SLOT(onError(PackageKit::Transaction::Error,QString)));
+
+        m_searchTrans->whatProvides(PackageKit::Transaction::ProvidesAny, pkgId,
+                                    PackageKit::Transaction::FilterNotInstalled | PackageKit::Transaction::FilterNewest);
+        qDebug() << "WhatProvides transaction:" << m_searchTrans->tid().path();
+        if (m_searchTrans->internalError() > PackageKit::Transaction::InternalErrorNone) {
+            qWarning() << m_searchTrans->internalErrorMessage();
+        }
     }
 }
 
 void LanguagePage::setupKeyboard()
 {
     KToolInvocation::startServiceByDesktopName(QLatin1String("kcm_keyboard"));
+}
+
+void LanguagePage::onPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary)
+{
+    qDebug() << "Got package" << packageID << summary << info;
+    m_installTrans = new PackageKit::Transaction(this);
+
+    connect(m_installTrans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+            this, SLOT(onInstallTransactionFinished(PackageKit::Transaction::Exit,uint)));
+    connect(m_installTrans, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
+            this, SLOT(onItemProgress(QString,PackageKit::Transaction::Status,uint)));
+    connect(m_installTrans, SIGNAL(message(PackageKit::Transaction::Message,QString)),
+            this, SLOT(onMessage(PackageKit::Transaction::Message,QString)));
+    connect(m_installTrans, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+            this, SLOT(onError(PackageKit::Transaction::Error,QString)));
+
+    m_installTrans->installPackage(packageID);
+    qDebug() << "Install transaction:" << m_installTrans->tid().path();
+    if (m_installTrans->internalError() > PackageKit::Transaction::InternalErrorNone) {
+        qWarning() << m_installTrans->internalErrorMessage();
+    }
+}
+
+void LanguagePage::onSearchTransactionFinished(PackageKit::Transaction::Exit status, uint runtime)
+{
+    qDebug() << "Search transaction" << m_searchTrans->tid().path() << "finished with status" << status << "in" << runtime/1000 << "seconds";
+    m_searchTrans->deleteLater();
+}
+
+void LanguagePage::onInstallTransactionFinished(PackageKit::Transaction::Exit status, uint runtime)
+{
+    qDebug() << "Install transaction" << m_installTrans->tid().path() << "finished with status" << status << "in" << runtime/1000 << "seconds";
+    m_installTrans->deleteLater();
+}
+
+void LanguagePage::onItemProgress(const QString &itemID, PackageKit::Transaction::Status status, uint percentage)
+{
+    qDebug() << "Item progress" << itemID << percentage << "%";
+}
+
+void LanguagePage::onMessage(PackageKit::Transaction::Message type, const QString &message)
+{
+    qDebug() << "Message" << message << "type:" << type;
+}
+
+void LanguagePage::onError(PackageKit::Transaction::Error error, const QString &details)
+{
+    qWarning() << "ERROR" << error << details;
 }

@@ -22,6 +22,9 @@
 
 #include "../page.h"
 
+#include <PackageKit/packagekit-qt2/Daemon>
+#include <PackageKit/packagekit-qt2/Transaction>
+
 namespace Plasma {
 class TreeView;
 }
@@ -40,11 +43,19 @@ class LanguagePage : public Page
 
   private Q_SLOTS:
     void setupKeyboard();
+    void onPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
+    void onSearchTransactionFinished(PackageKit::Transaction::Exit status, uint runtime);
+    void onInstallTransactionFinished(PackageKit::Transaction::Exit status, uint runtime);
+    void onItemProgress(const QString &itemID, PackageKit::Transaction::Status status, uint percentage);
+    void onMessage(PackageKit::Transaction::Message type, const QString &message);
+    void onError(PackageKit::Transaction::Error error, const QString &details);
 
   private:
     Plasma::TreeView* mLangsWidget;
     QString m_locationLanguage;
     QStringList m_detectedLanguages;
+    PackageKit::Transaction * m_searchTrans;
+    PackageKit::Transaction * m_installTrans;
 };
 
 #endif // LANGUAGEPAGE_H
