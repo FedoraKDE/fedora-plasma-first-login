@@ -1,0 +1,12 @@
+[Global]
+IconName=fedora-logo-icon
+Name=Fedora Plasma First Login
+Comment=Fedora Plasma First Login Wizard
+
+[Event/LangPackInstallSuccess]
+Name=Language pack installed successfully
+Action=Popup
+
+[Event/LangPackInstallFailed]
+Name=Language pack installation failed
+Action=Popup

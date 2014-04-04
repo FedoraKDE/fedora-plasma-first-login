@@ -26,6 +26,7 @@
 #include <KStandardDirs>
 #include <KToolInvocation>
 #include <KDebug>
+#include <KNotification>
 
 #include <QGraphicsLinearLayout>
 #include <QTreeView>
@@ -47,7 +48,7 @@ LanguagePage::LanguagePage()
 
     Plasma::Label * label = new Plasma::Label(this);
     label->setText(i18n("Select your language below. This will switch language of all KDE applications.<br><br>"
-                        "<em>Note:</em> If your language is auto-detected, it will be placed first in the list and preselected."
+                        "<em>Note:</em> If your language is auto-detected, it will be placed first in the list and preselected. "
                         "If it's available but not installed currently, it will be automatically installed in the background."));
     layout->addItem(label);
 
@@ -155,7 +156,11 @@ void LanguagePage::setupKeyboard()
 void LanguagePage::onPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary)
 {
     qDebug() << "Got package" << packageID << summary << info;
-    m_installTrans = new PackageKit::Transaction(this);
+    if (m_installTrans) { // reuse
+        m_installTrans->reset();
+    } else {
+        m_installTrans = new PackageKit::Transaction(this);
+    }
 
     connect(m_installTrans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(onInstallTransactionFinished(PackageKit::Transaction::Exit,uint)));
@@ -182,6 +187,17 @@ void LanguagePage::onSearchTransactionFinished(PackageKit::Transaction::Exit sta
 void LanguagePage::onInstallTransactionFinished(PackageKit::Transaction::Exit status, uint runtime)
 {
     qDebug() << "Install transaction" << m_installTrans->tid().path() << "finished with status" << status << "in" << runtime/1000 << "seconds";
+    if (status == PackageKit::Transaction::ExitSuccess) {
+        qDebug() << "Installed package:" << m_installTrans->lastPackage();
+        KNotification::event(QLatin1String("LangPackInstallSuccess"),
+                             i18n("Language pack %1 installed succesfully.", PackageKit::Transaction::packageName(m_installTrans->lastPackage())),
+                             KIcon(QLatin1String("preferences-desktop-locale")).pixmap(64));
+    } else {
+        qWarning() << "Failed to install package:" << m_installTrans->lastPackage();
+        KNotification::event(QLatin1String("LangPackInstallFailed"),
+                             i18n("Language pack %1 installation failed.", PackageKit::Transaction::packageName(m_installTrans->lastPackage())),
+                             KIcon(QLatin1String("dialog-error")).pixmap(64));
+    }
     m_installTrans->deleteLater();
 }
 
