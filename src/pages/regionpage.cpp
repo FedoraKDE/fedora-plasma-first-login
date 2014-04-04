@@ -24,6 +24,7 @@
 #include <QGraphicsWidget>
 #include <QGraphicsLinearLayout>
 #include <QStandardItemModel>
+#include <QSortFilterProxyModel>
 #include <QTreeView>
 
 #include <KGlobal>
@@ -81,12 +82,18 @@ void RegionPage::initializePage()
         item->setData(countryCode);
         model->appendRow(item);
     }
-    mRegionsWidget->setModel(model);
-    mRegionsWidget->nativeWidget()->sortByColumn(0, Qt::AscendingOrder);
+
+    QSortFilterProxyModel * sortModel = new QSortFilterProxyModel(this);
+    sortModel->setDynamicSortFilter(true);
+    sortModel->setSortLocaleAware(true);
+    sortModel->sort(0);
+    sortModel->setSourceModel(model);
+
+    mRegionsWidget->setModel(sortModel);
 
     // pre-select the auto-detected country, if available
     if (!m_detectedCountry.isEmpty()) {
-        const QModelIndexList detectedCountryIndexes = model->match(model->index(0,0), Qt::UserRole + 1, m_detectedCountry, 1, Qt::MatchExactly);
+        const QModelIndexList detectedCountryIndexes = sortModel->match(sortModel->index(0,0), Qt::UserRole + 1, m_detectedCountry, 1, Qt::MatchExactly);
         if (!detectedCountryIndexes.isEmpty()) {
             mRegionsWidget->nativeWidget()->selectionModel()->setCurrentIndex(detectedCountryIndexes.first(),
                                                                               QItemSelectionModel::SelectCurrent);
