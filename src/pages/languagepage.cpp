@@ -126,7 +126,11 @@ void LanguagePage::commitChanges()
     if (!KGlobal::locale()->installedLanguages().contains(lang)) {
         const QString pkgId = QString::fromLatin1("kde-l10n-%1").arg(lang);
         qDebug() << "Wanting to install" << pkgId;
-        m_searchTrans = new PackageKit::Transaction(this);
+        if (m_searchTrans) { // reuse
+            m_searchTrans->reset();
+        } else {
+            m_searchTrans = new PackageKit::Transaction(this);
+        }
 
         connect(m_searchTrans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                 this, SLOT(onPackage(PackageKit::Transaction::Info,QString,QString)));
