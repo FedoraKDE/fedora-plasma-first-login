@@ -2,6 +2,7 @@ set(declarative_SRCS
     firstloginplugin.cpp
     toolinvocation.cpp
     locales.cpp
+    standardpaths.cpp
 )
 
 add_library(firstloginplugin SHARED ${declarative_SRCS})

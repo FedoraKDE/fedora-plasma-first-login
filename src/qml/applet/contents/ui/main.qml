@@ -39,6 +39,11 @@ App
             PageInfo {
                 title: i18n("Region");
                 source: "RegionPage.qml";
+            },
+
+            PageInfo {
+                title: i18n("Color Theme");
+                source: "ColorThemePage.qml";
             }
         ]
 

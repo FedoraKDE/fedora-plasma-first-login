@@ -17,21 +17,30 @@
  *
  */
 
-#include "firstloginplugin.h"
-
-#include <QtQml>
-
-#include "toolinvocation.h"
-#include "locales.h"
 #include "standardpaths.h"
 
+#include <QStandardPaths>
 
-void FirstLoginPlugin::registerTypes(const char* uri)
+StandardPathsAttached::StandardPathsAttached(QObject* parent)
+    : QObject(parent)
 {
-    Q_ASSERT(QLatin1String(uri) == QLatin1String("org.fedoraproject.kde.FirstLogin"));
-
-    qmlRegisterType<ToolInvocation>(uri, 1, 0, "ToolInvocation");
-    // Prevent conflict with "Locale" type (????)
-    qmlRegisterType<Locale>(uri, 1, 0, "GlobalLocale");
-    qmlRegisterType<StandardPaths>(uri, 1, 0, "StandardPaths");
 }
+
+QString StandardPathsAttached::appData(const QString& resource, bool isFile)
+{
+    return QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                  QLatin1String("fedora-plasma-first-login/") + resource,
+                                  isFile ? QStandardPaths::LocateFile
+                                         : QStandardPaths::LocateDirectory);
+}
+
+StandardPaths::StandardPaths(QObject* parent)
+    : QObject(parent)
+{
+}
+
+StandardPathsAttached* StandardPaths::qmlAttachedProperties(QObject* parent)
+{
+    return new StandardPathsAttached(parent);
+}
+
