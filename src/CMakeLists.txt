@@ -4,47 +4,22 @@ add_subdirectory(declarative)
 
 set(FPFL_sources
     main.cpp
-#    frame.cpp
-#    hoverbutton.cpp
-#    sidewidget.cpp
-#    sidewidgetpagelabel.cpp
-#    applet.cpp
-#    page.cpp
 )
-
-set(FPFL_pages
-#    pages/welcomepage.cpp
-#    pages/languagepage.cpp
-#    pages/regionpage.cpp
-#    pages/colorthemepage.cpp
-#    pages/userpage.cpp
-#    pages/networkpage.cpp
-)
-
-set(FPFL_dialogs
-#    dialogs/chfacedlg.cpp
-)
-
-#qt5_wrap_ui(FPFL_dialogs
-#    dialogs/faceDlg.ui
-#)
 
 add_executable(fedora-plasma-first-login
-                    ${FPFL_sources}
-                    ${FPFL_pages}
-                    ${FPFL_dialogs}
+    ${FPFL_sources}
 )
 
 target_link_libraries(fedora-plasma-first-login
-                      Qt5::Core
-                      Qt5::Gui
-                      Qt5::Widgets # FIXME: QApplication
-                      Qt5::Quick
-                      KF5::I18n
-                      KF5::Plasma
-                      KF5::Service
-                      KF5::KDE4Support
-                      #${PACKAGEKIT_QT2_LIBRARIES}      #FIXME: Needs Qt 5 version
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets # FIXME: QApplication
+    Qt5::Quick
+    KF5::I18n
+    KF5::Plasma
+    KF5::Service  # Plasma dependency
+    KF5::KDE4Support # Plasma dependency
+    #${PACKAGEKIT_QT2_LIBRARIES}      #FIXME: Needs Qt 5 version
 )
 
 install(TARGETS fedora-plasma-first-login ${INSTALL_TARGETS_DEFAULT_ARGS})
