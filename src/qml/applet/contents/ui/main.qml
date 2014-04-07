@@ -25,12 +25,12 @@ App
     wizard: Wizard {
 
         pages: [
-            Page {
+            PageInfo {
                 title: i18n("Welcome");
                 source: "WelcomePage.qml";
             },
 
-            Page {
+            PageInfo {
                 title: i18n("Languages");
                 source: "LanguagePage.qml";
             }

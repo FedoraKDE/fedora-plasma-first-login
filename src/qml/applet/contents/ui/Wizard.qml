@@ -20,7 +20,7 @@
 import QtQuick 2.0
 
 Item {
-    property list<Item> pages;
+    property list<PageInfo> pages;
 
     property int currentPageId: 0;
 
