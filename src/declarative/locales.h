@@ -35,10 +35,14 @@ class LocaleAttached: public QObject
 
   public:
     Q_INVOKABLE QStringList allLanguagesList() const;
+    Q_INVOKABLE QStringList allCountriesList() const;
     Q_INVOKABLE QString languageCodeToName(const QString &code) const;
+    Q_INVOKABLE QString countryCodeToName(const QString &code) const;
     Q_INVOKABLE QStringList installedLanguages() const;
 
     Q_INVOKABLE QStringList languagesForCountry(const QString &countryCode);
+    Q_INVOKABLE QString flagForCountry(const QString &countryCode);
+
 
     Q_INVOKABLE void setLanguage(const QString &languageName);
 

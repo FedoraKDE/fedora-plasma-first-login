@@ -34,6 +34,11 @@ App
             PageInfo {
                 title: i18n("Languages");
                 source: "LanguagePage.qml";
+            },
+
+            PageInfo {
+                title: i18n("Region");
+                source: "RegionPage.qml";
             }
         ]
 

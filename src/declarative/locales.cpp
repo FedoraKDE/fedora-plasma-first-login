@@ -34,6 +34,11 @@ QStringList LocaleAttached::allLanguagesList() const
     return KGlobal::locale()->allLanguagesList();
 }
 
+QStringList LocaleAttached::allCountriesList() const
+{
+    return KGlobal::locale()->allCountriesList();
+}
+
 QStringList LocaleAttached::installedLanguages() const
 {
     return KGlobal::locale()->installedLanguages();
@@ -43,6 +48,12 @@ QString LocaleAttached::languageCodeToName(const QString& code) const
 {
     return KGlobal::locale()->languageCodeToName(code);
 }
+
+QString LocaleAttached::countryCodeToName(const QString& code) const
+{
+    return KGlobal::locale()->countryCodeToName(code);
+}
+
 
 void LocaleAttached::setLanguage(const QString& languageName)
 {
@@ -60,6 +71,12 @@ QStringList LocaleAttached::languagesForCountry(const QString& countryCode)
     KConfig cfg(localeConfig);
     const KConfigGroup cfgGroup(&cfg, "KCM Locale");
     return cfgGroup.readEntry("Languages", QStringList());
+}
+
+QString LocaleAttached::flagForCountry(const QString& countryCode)
+{
+    return QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                  QString::fromLatin1("locale/l10n/%1/flag.png").arg(countryCode.toLower()));
 }
 
 
