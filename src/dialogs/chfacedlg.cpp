@@ -48,7 +48,7 @@ ChFaceDlg::ChFaceDlg(QWidget *parent)
     m_faceDirs.append(QLatin1String("/usr/share/pixmaps/faces/")); // gdm stuff, will be checked if exists ;)
     qDebug() << "face dirs:" << m_faceDirs;
 
-    setCaption( i18nc("@title:window", "Change your Face") );
+    setCaption( i18nc("@title:window", "Change your user picture") );
     setButtons( Ok|Cancel|User1|User2 );
     setDefaultButton( Cancel );
 
