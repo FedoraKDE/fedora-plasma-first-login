@@ -36,7 +36,24 @@ Item {
      * Variant map with description of changes that should be committed
      * at the very end of the guide.
      *
-     * TODO: Define syntax and content format
+     * This is an associative array.
      */
     property variant changes;
+
+    Component.onCompleted: {
+        changes = {};
+    }
+
+    function configure(prop, val) {
+        var obj = changes;
+        obj[prop] = val;
+        changes = obj;
+    }
+
+    onChangesChanged: {
+        console.log("PageInfo(" + title + ") changes updated:");
+        for (var key in changes) {
+            console.log("\t" + key + ": " + changes[key]);
+        }
+    }
 }

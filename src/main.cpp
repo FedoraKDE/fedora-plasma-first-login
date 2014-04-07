@@ -60,6 +60,9 @@ int main(int argc, char **argv)
     // Set QT_MESSAGE_PATTERN to be useful
     qputenv("QT_MESSAGE_PATTERN", "[%{type}] %{appname} (%{file}:%{line}) - %{message}");
 
+    // Don't use default KDEHOME. We initialize various KDE5 stuff and it could
+    // clash with KDE4 home.
+    qputenv("KDEHOME", "$HOME/.kde5-firstlogin");
 
     Plasma::Package package = Plasma::PluginLoader::self()->loadPackage(QLatin1String("Plasma/Applet"));
     QString appletPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation,

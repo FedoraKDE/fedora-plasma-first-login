@@ -65,6 +65,7 @@ PlasmaComponents.PageStack {
     function pageLoaded(pageId, page)
     {
         console.log("PagesSlider::pageLoaded: " + pageId);
+        page.pageInfo = wizard.pages[pageId];
         root.push(page);
     }
 }

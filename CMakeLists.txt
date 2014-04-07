@@ -35,6 +35,7 @@ find_package(KF5 CONFIG REQUIRED COMPONENTS
     I18n
     Service     # required by Plasma
     KDE4Support # required by Plasma
+    Config
 )
 
 # FIXME: Need Qt 5 version!

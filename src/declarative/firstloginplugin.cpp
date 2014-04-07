@@ -19,7 +19,17 @@
 
 #include "firstloginplugin.h"
 
+#include <QtQml>
+
+#include "toolinvocation.h"
+#include "locales.h"
+
+
 void FirstLoginPlugin::registerTypes(const char* uri)
 {
     Q_ASSERT(QLatin1String(uri) == QLatin1String("org.fedoraproject.kde.FirstLogin"));
+
+    qmlRegisterType<ToolInvocation>(uri, 1, 0, "ToolInvocation");
+    // Prevent conflict with "Locale" type (????)
+    qmlRegisterType<Locale>(uri, 1, 0, "GlobalLocale");
 }

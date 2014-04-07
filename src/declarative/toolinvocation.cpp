@@ -17,28 +17,27 @@
  *
  */
 
+#include "toolinvocation.h"
 
-import QtQuick 2.0
+#include <KToolInvocation>
 
-App
+ToolInvocationAttached::ToolInvocationAttached(QObject* parent)
+    : QObject(parent)
 {
-    wizard: Wizard {
+}
 
-        pages: [
-            PageInfo {
-                title: i18n("Welcome");
-                source: "WelcomePage.qml";
-                status: 1; // FIXME: This should be generic
-            },
+void ToolInvocationAttached::startServiceByDesktopName(const QString& desktopName)
+{
+    KToolInvocation::startServiceByDesktopName(desktopName);
+}
 
-            PageInfo {
-                title: i18n("Languages");
-                source: "LanguagePage.qml";
-            }
-        ]
 
-        Component.onCompleted: {
-            console.log("Wizard::onCompleted");
-        }
-    }
+ToolInvocation::ToolInvocation(QObject* parent)
+    : QObject(parent)
+{
+}
+
+ToolInvocationAttached* ToolInvocation::qmlAttachedProperties(QObject* parent)
+{
+    return new ToolInvocationAttached(parent);
 }

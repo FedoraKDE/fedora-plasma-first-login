@@ -22,6 +22,8 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 
 PlasmaComponents.Page
 {
+    property PageInfo pageInfo;
+
     anchors {
         leftMargin: 20;
         rightMargin: 20;
