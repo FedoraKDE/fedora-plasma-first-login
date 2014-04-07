@@ -24,7 +24,7 @@
 #include <QGraphicsWidget>
 #include <QGraphicsGridLayout>
 #include <QDir>
-#include <QDBusPendingReply>
+#include <QDBusReply>
 
 #include <KGlobal>
 #include <KLocale>
@@ -50,8 +50,7 @@ UserPage::UserPage()
                        QDBusConnection::systemBus(), this),
       m_userIface(0)
 {
-    QDBusPendingReply<QDBusObjectPath> reply = m_accountManager.asyncCall(QLatin1String("FindUserById"), static_cast<qint64>(m_user.uid()));
-    reply.waitForFinished();
+    QDBusReply<QDBusObjectPath> reply = m_accountManager.asyncCall(QLatin1String("FindUserById"), static_cast<qint64>(m_user.uid()));
     if (reply.isValid()) {
         const QString userPath = reply.value().path();
         qDebug() << "User DBUS path" << userPath;
