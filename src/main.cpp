@@ -17,35 +17,68 @@
  *
  */
 
-#include <KAboutData>
-#include <KApplication>
-#include <KLocalizedString>
-#include <KCmdLineArgs>
-#include <KIcon>
+#include <QApplication>
+#include <QQuickView>
+#include <QIcon>
+#include <QStandardPaths>
+#include <QDebug>
 
-#include "view.h"
+#include <KLocalizedString>
+
+#include <Plasma/Package>
+#include <Plasma/PackageStructure>
+#include <Plasma/Plasma>
+#include <Plasma/PluginLoader>
+
+
+void prependEnv(const char *env, const QByteArray &value)
+{
+    QByteArray values = qgetenv(env);
+    if (!values.contains(value + ":")) {
+        values = value + ":" + values;
+    }
+    qputenv(env, values);
+}
 
 int main(int argc, char **argv)
 {
-    KAboutData about("fedora-plasma-first-login",
-                     "fedora-plasma-first-login",
-                     ki18n("Fedora Plasma First Login Guide"),
-                     QByteArray(FPFL_VERSION),
-                     ki18n("First Login wizard that will guide user through initial personalization of their profile"),
-                     KAboutData::License_GPL_V2,
-                     ki18n("Copyright (c) 2014 Fedora Plasma hackers"), // Copyright
-                     KLocalizedString(), // Other text
-                     "http://fedoraproject.org/wiki/Fedora_Plasma_Product",
-                     QByteArray()); // TODO: mail for submitting bugs to RHBZ
-    KCmdLineArgs::init(argc, argv, &about);
-
-    KApplication app;
-    app.setWindowIcon(KIcon(QLatin1String("start-here-kde-fedora")));
+    QApplication app(argc, argv);
+    app.setApplicationName(QLatin1String("fedora-plasma-first-login"));
+    app.setApplicationVersion(QLatin1String(FPFL_VERSION));
     app.setOrganizationName(QLatin1String("Fedora Plasma"));
     app.setOrganizationDomain(QLatin1String("org.fedoraproject.kde"));
 
-    View view;
+    // As long as we install KDE 5 into prefix, we need to override XDG_DATA_DIRS
+    // so that we can use QStandardPaths to locate stuff from kde5-workspace.
+    prependEnv("XDG_DATA_DIRS", "/opt/kde5/share");
+    // FIXME: OUCH!
+    prependEnv("QML2_IMPORT_PATH", "/usr/lib64/qml");
+    prependEnv("QML2_IMPORT_PATH", "/opt/kde5/lib64/qml");
+
+    // Set QT_MESSAGE_PATTERN to be useful
+    qputenv("QT_MESSAGE_PATTERN", "[%{type}] %{appname} (%{file}:%{line}) - %{message}");
+
+
+    Plasma::Package package = Plasma::PluginLoader::self()->loadPackage(QLatin1String("Plasma/Applet"));
+    QString appletPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                QLatin1String("fedora-plasma-first-login/applet"),
+                                                QStandardPaths::LocateDirectory);
+    // For development purposes, does not require installing into /usr
+    if (appletPath.isEmpty()) {
+        appletPath = QLatin1String(CMAKE_SOURCE_DIR "/src/qml/applet");
+    }
+    package.setPath(appletPath);
+    if (!package.isValid()) {
+        qFatal("Failed to load Fedora Plasma First Login Applet");
+    }
+    qDebug() << "Found applet:" << package.metadata().pluginName() << package.defaultPackageRoot();
+
+    QQuickView view;
+    view.setIcon(QIcon::fromTheme(QLatin1String("start-here-kde-fedora")));
+    view.setTitle(i18n("Fedora Plasma First Login Guide"));
+    view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.resize(800, 600);
+    view.setSource(QUrl::fromLocalFile(package.filePath("ui", QLatin1String("main.qml"))));
     view.show();
 
     return app.exec();
