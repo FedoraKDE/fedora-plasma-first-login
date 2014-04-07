@@ -1,12 +1,13 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+add_subdirectory(declarative)
+
 set(FPFL_sources
     main.cpp
 #    frame.cpp
 #    hoverbutton.cpp
 #    sidewidget.cpp
 #    sidewidgetpagelabel.cpp
-#    wizard.cpp
 #    applet.cpp
 #    page.cpp
 )

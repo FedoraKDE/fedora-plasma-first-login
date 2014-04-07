@@ -54,6 +54,8 @@ int main(int argc, char **argv)
     // FIXME: OUCH!
     prependEnv("QML2_IMPORT_PATH", "/usr/lib64/qml");
     prependEnv("QML2_IMPORT_PATH", "/opt/kde5/lib64/qml");
+    // 'Coz my setup is cozy
+    prependEnv("QML2_IMPORT_PATH",  "/opt/kde-devel/lib64/qml/");
 
     // Set QT_MESSAGE_PATTERN to be useful
     qputenv("QT_MESSAGE_PATTERN", "[%{type}] %{appname} (%{file}:%{line}) - %{message}");

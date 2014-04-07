@@ -17,30 +17,26 @@
  *
  */
 
-#ifndef SIDEWIDGET_H
-#define SIDEWIDGET_H
+import QtQuick 2.0
 
-#include <Plasma/Frame>
+// TODO: Can we replace this type by using QVariantMap representation?
+Item {
+    property string title: "";
+    property string source: "";
 
-class SideWidgetPageLabel;
-class QGraphicsLinearLayout;
-class Wizard;
+    /**
+     * 0: Inactive
+     * 1: Selected
+     * 2: Done
+     * 3: Skipped
+     */
+    property int status: 0;
 
-class SideWidget : public Plasma::Frame
-{
-    Q_OBJECT
-
-  public:
-    SideWidget(QGraphicsWidget* parent = 0);
-    ~SideWidget();
-
-  private Q_SLOTS:
-    void onPageChanged(int id);
-
-  private:
-    QGraphicsLinearLayout* mTitlesLayout;
-    QMap<int, SideWidgetPageLabel*> mTitleLabels;
-    int mActivePage;
-};
-
-#endif // SIDEWIDGET_H
+    /**
+     * Variant map with description of changes that should be committed
+     * at the very end of the guide.
+     *
+     * TODO: Define syntax and content format
+     */
+    property variant changes;
+}

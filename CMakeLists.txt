@@ -27,6 +27,7 @@ find_package(Qt5 CONFIG REQUIRED COMPONENTS
     Gui
     Widgets # FIXME: QApplication
     Quick
+    Script
 )
 
 find_package(KF5 CONFIG REQUIRED COMPONENTS
@@ -48,6 +49,14 @@ add_definitions(
     -DQT_STRICT_ITERATORS
     -DCMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 )
+
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
+  # more aggressive warnings and C++11 support
+  set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -std=iso9899:1990 -Wall -Wextra")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra")
+endif()
+
 
 include_directories(${PACKAGEKIT_QT2_INCLUDE_DIR})
 

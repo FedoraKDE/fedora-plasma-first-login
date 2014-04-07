@@ -17,38 +17,9 @@
  *
  */
 
-#include "page.h"
+#include "firstloginplugin.h"
 
-#include <QMetaClassInfo>
-
-Page::Page()
-    : QGraphicsWidget()
+void FirstLoginPlugin::registerTypes(const char* uri)
 {
-}
-
-Page::~Page()
-{
-}
-
-void Page::initializePage()
-{
-}
-
-bool Page::isComplete() const
-{
-    return true;
-}
-
-void Page::commitChanges()
-{
-}
-
-bool Page::shouldSkip() const
-{
-    return false;
-}
-
-QString Page::title() const
-{
-    return i18n(metaObject()->classInfo(metaObject()->indexOfClassInfo("Title")).value());
+    Q_ASSERT(QLatin1String(uri) == QLatin1String("org.fedoraproject.kde.FirstLogin"));
 }

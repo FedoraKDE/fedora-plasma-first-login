@@ -17,39 +17,19 @@
  *
  */
 
-#ifndef WIZARDAPPLET_H
-#define WIZARDAPPLET_H
+#ifndef FIRSTLOGINPLUGIN_H
+#define FIRSTLOGINPLUGIN_H
 
-#include <Plasma/Applet>
+#include <QQmlExtensionPlugin>
 
-#include "sidewidgetpagelabel.h"
-
-class QGraphicsLinearLayout;
-namespace Plasma {
-class PushButton;
-class Label;
-}
-
-class Applet : public Plasma::Applet
+class FirstLoginPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
 
   public:
-    Applet(QGraphicsItem* parent = 0);
-    ~Applet();
-
-    void init();
-
-  private Q_SLOTS:
-    void wizardPageChanged(int id);
-
-  private:
-    Plasma::FrameSvg* mBackgroundSvg;
-    Plasma::PushButton* mPrevButton;
-    Plasma::PushButton* mNextButton;
-    Plasma::Label* mPageTitle;
-
-    QGraphicsLinearLayout* mContentLayout;
+    void registerTypes(const char *uri);
 };
 
-#endif // WIZARDAPPLET_H
+
+#endif // FIRSTLOGINPLUGIN_H
