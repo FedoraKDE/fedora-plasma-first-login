@@ -44,7 +44,13 @@ App
             PageInfo {
                 title: i18n("Color Theme");
                 source: "ColorThemePage.qml";
+            },
+
+            PageInfo {
+                title: i18n("Network setting");
+                source: "NetworkPage.qml";
             }
+
         ]
 
         Component.onCompleted: {

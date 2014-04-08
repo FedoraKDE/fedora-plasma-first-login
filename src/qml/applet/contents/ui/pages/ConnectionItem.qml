@@ -17,11 +17,11 @@
  *
  */
 
-import QtQuick 1.1
-import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.plasma.core 0.1 as PlasmaCore
-import org.kde.networkmanagement 0.1 as PlasmaNM
-
+import QtQuick 2.0
+import org.kde.kquickcontrolsaddons 2.0
+import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.networkmanagement 0.1 as PlasmaNM
 
 PlasmaComponents.ListItem {
     id: connectionItem;
@@ -32,11 +32,30 @@ PlasmaComponents.ListItem {
 
     property bool visiblePasswordDialog: false;
 
-    enabled: true
+    property int iconSize: units.iconSizes.medium;
+
+    enabled: true;
+    checked: ListView.isCurrentItem;
+
     height: if (visiblePasswordDialog)
                 connectionItemBase.height + expandableComponentLoader.height + padding.margins.top + padding.margins.bottom;
             else
                 connectionItemBase.height + padding.margins.top + padding.margins.bottom;
+
+    PlasmaCore.Svg {
+        id: svgNetworkIcons;
+
+        multipleImages: true;
+        imagePath: "icons/network";
+    }
+
+    PlasmaCore.FrameSvgItem {
+        id: padding
+        imagePath: "widgets/viewitem"
+        prefix: "hover"
+        opacity: 0
+        anchors.fill: parent
+    }
 
     Item {
         id: connectionItemBase;
@@ -52,7 +71,7 @@ PlasmaComponents.ListItem {
         PlasmaCore.SvgItem {
             id: connectionSvgIcon;
 
-            width: sizes.iconSize;
+            width: iconSize;
             height: width;
             anchors {
                 left: parent.left
@@ -70,12 +89,11 @@ PlasmaComponents.ListItem {
                 left: connectionSvgIcon.right;
                 leftMargin: padding.margins.left;
                 right: stateChangeButton.left;
-                top: parent.top;
-                topMargin: 0;
+                bottom: connectionSvgIcon.verticalCenter
             }
             text: ItemUniqueName;
             elide: Text.ElideRight;
-            font.weight: ConnectionState == PlasmaNM.Enums.Activated || Uuid ? Font.DemiBold : Font.Normal;
+            font.weight: ConnectionState == PlasmaNM.Enums.Activated ? Font.DemiBold : Font.Normal;
             font.italic: ConnectionState == PlasmaNM.Enums.Activating ? true : false;
         }
 
@@ -91,24 +109,36 @@ PlasmaComponents.ListItem {
             }
 
             font.pointSize: theme.smallestFont.pointSize;
-            color: "#99"+(theme.textColor.toString().substr(1))
+            opacity: 0.6
             text: itemText();
 
             elide: Text.ElideRight;
+        }
+
+        PlasmaComponents.BusyIndicator {
+            id: connectingIndicator;
+
+            width: iconSize;
+            height: width;
+            anchors {
+                right: stateChangeButton.left;
+                rightMargin: padding.margins.right;
+                verticalCenter: parent.verticalCenter;
+            }
+            running: ConnectionState == PlasmaNM.Enums.Activating;
+            visible: running;
         }
 
         PlasmaComponents.Button {
             id: stateChangeButton;
 
             anchors {
-                verticalCenter: parent.verticalCenter;
                 right: parent.right;
+                verticalCenter: parent.verticalCenter;
             }
-
-            implicitWidth: minimumWidth + padding.margins.left + padding.margins.right;
-            text:if (ConnectionState == PlasmaNM.Enums.Deactivated)
+            text: if (ConnectionState == PlasmaNM.Enums.Deactivated)
                     i18n("Connect");
-                else
+                    else
                     i18n("Disconnect");
 
             onClicked: {

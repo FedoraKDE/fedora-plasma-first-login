@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2014 Jan Grulich <jgrulich@redhat.com>
+ * Copyright (C) 2014  Daniel Vrátil <dvratil@redhat.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +18,17 @@
  *
  */
 
-import QtQuick 1.1
-import org.kde.plasma.core 0.1 as PlasmaCore
-import org.kde.networkmanagement 0.1 as PlasmaNM
+import QtQuick 2.0
+import QtQuick.Layouts 1.0
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.networkmanagement 0.1 as PlasmaNM
+import org.fedoraproject.kde.FirstLogin 1.0
+import ".."
 
-Item {
-    id: mainWindow;
+Page
+{
+    id: page;
 
     PlasmaNM.Handler {
             id: handler;
@@ -38,33 +44,30 @@ Item {
         sourceModel: connectionModel;
     }
 
-    PlasmaCore.Svg {
-        id: svgNetworkIcons;
-
-        multipleImages: true;
-        imagePath: "icons/plasma-networkmanagement2";
-    }
-
-    PlasmaCore.FrameSvgItem {
-        id: padding
-        imagePath: "widgets/viewitem"
-        prefix: "hover"
-        opacity: 0
-        anchors.fill: parent
-    }
-
-    Item {
-        id: sizes;
-
-        property int iconSize: theme.iconSizes.toolbar;
-        property int itemSize: iconSize + padding.margins.top + padding.margins.bottom;
+    PlasmaComponents.Label {
+        id: label;
+        anchors {
+            top: parent.top;
+            left: parent.left;
+            right: parent.right;
+        }
+        wrapMode: Text.WordWrap;
+        textFormat: Text.StyledText;
+        verticalAlignment: Text.AlignJustify;
+        text: i18n("<p>Below you can see the list of available networks to connect to.</p><br/>" +
+                   "<p><em>Note:</em> If no wireless connections show up, make sure to enable the Wifi kill switch. </p>");
     }
 
     ListView {
-        id: connectionView;
+        id: networkListView;
 
         anchors {
-            fill: parent;
+            top: label.bottom;
+            bottom: parent.bottom;
+            left: parent.left;
+            right: parent.right;
+            topMargin: 15;
+            bottomMargin: 15;
         }
         clip: true
         model: appletProxyModel;
@@ -77,6 +80,14 @@ Item {
                     connectionView.currentIndex = index;
                 }
             }
+
+            onClicked: {
+                connectionView.currentIndex = index;
+            }
         }
+    }
+
+    PlasmaComponents.SectionScroller {
+        listView: networkListView;
     }
 }
