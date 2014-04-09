@@ -69,11 +69,12 @@ Page
             topMargin: 15;
             bottomMargin: 15;
         }
-        clip: true
-        model: appletProxyModel;
-        currentIndex: -1;
-        interactive: true;
+
         boundsBehavior: Flickable.StopAtBounds;
+        clip: true;
+        currentIndex: -1;
+        model: appletProxyModel;
+
         delegate: ConnectionItem {
             onStateChanged: {
                 if (state == "expanded") {
