@@ -138,6 +138,7 @@ PlasmaComponents.ListItem {
 
             anchors {
                 right: parent.right;
+                rightMargin: padding.margins.right;
                 verticalCenter: parent.verticalCenter;
             }
 
