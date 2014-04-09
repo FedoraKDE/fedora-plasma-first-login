@@ -37,9 +37,8 @@ PlasmaCore.FrameSvgItem {
         active: true;
         smooth: true;
 
-        // FIXME: IconItem won't load anything larger than 63x63'
-        width: 63;
-        height: 63;
+        width: units.iconSizes.enormous;
+        height: units.iconSizes.enormous;
 
         anchors {
             top: parent.top;
@@ -73,7 +72,7 @@ PlasmaCore.FrameSvgItem {
                             wizard.pages[index].status == 2 ? "dialog-ok-apply" :
                             wizard.pages[index].statis == 3 ? "dialog-ok" :
                             "";
-                    width: 32;
+                    width: units.iconSizes.medium;
                     anchors {
                         left: parent.left;
                         verticalCenter: parent.verticalCenter;
