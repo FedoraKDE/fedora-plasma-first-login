@@ -67,6 +67,7 @@ Page
     ListView {
         id: regionsListView;
 
+        boundsBehavior: Flickable.StopAtBounds;
         clip: true;
         currentIndex: -1;
 

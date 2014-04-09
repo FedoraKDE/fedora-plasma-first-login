@@ -69,6 +69,7 @@ Page
     ListView {
         id: languagesListView;
 
+        boundsBehavior: Flickable.StopAtBounds;
         clip: true;
         currentIndex: 0;
 
