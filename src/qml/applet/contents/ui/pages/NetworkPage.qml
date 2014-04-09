@@ -31,7 +31,7 @@ Page
     id: page;
 
     PlasmaNM.Handler {
-            id: handler;
+        id: handler;
     }
 
     PlasmaNM.NetworkModel {
@@ -77,12 +77,12 @@ Page
         delegate: ConnectionItem {
             onStateChanged: {
                 if (state == "expanded") {
-                    connectionView.currentIndex = index;
+                    networkListView.currentIndex = index;
                 }
             }
 
             onClicked: {
-                connectionView.currentIndex = index;
+                networkListView.currentIndex = index;
             }
         }
     }
