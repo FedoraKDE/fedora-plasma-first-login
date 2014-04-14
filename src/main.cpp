@@ -22,6 +22,7 @@
 #include <QIcon>
 #include <QStandardPaths>
 #include <QDebug>
+#include <QQmlEngine>
 
 #include <KLocalizedString>
 
@@ -84,6 +85,7 @@ int main(int argc, char **argv)
     view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.resize(800, 600);
     view.setSource(QUrl::fromLocalFile(package.filePath("ui", QLatin1String("main.qml"))));
+    QObject::connect(view.engine(), &QQmlEngine::quit, &app, &QApplication::quit);
     view.show();
 
     return app.exec();

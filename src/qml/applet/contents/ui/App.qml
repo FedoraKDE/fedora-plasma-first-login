@@ -75,8 +75,7 @@ Item {
 
         PlasmaComponents.Button {
             id: nextButton;
-            text: i18n("Next");
-            enabled: !wizard.isLastPage;
+            text: !wizard.isLastPage ? i18n("Next") : i18n("Finish");
             anchors {
                 right: parent.right;
                 verticalCenter: parent.verticalCenter;

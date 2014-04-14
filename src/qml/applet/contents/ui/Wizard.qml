@@ -29,7 +29,11 @@ Item {
     function next()
     {
         pages[currentPageId].status = 2; // Done
-        if (currentPageId < pages.length) {
+        if (isLastPage) {
+            Qt.quit();
+            console.log("Wizard::finish");
+        }
+        else if (currentPageId < pages.length) {
             currentPageId++;
             pages[currentPageId].status = 1; // Active
             console.log("Wizard::next");
