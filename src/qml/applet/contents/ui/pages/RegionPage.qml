@@ -112,8 +112,8 @@ Page
                 source: flag;
                 active: true;
                 smooth: true;
-                width: 24;
-                height: 24;
+                width: units.iconSizes.medium;
+                height: units.iconSizes.medium;
 
                 anchors {
                     left: parent.left;
