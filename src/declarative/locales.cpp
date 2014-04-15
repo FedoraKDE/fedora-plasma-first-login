@@ -19,7 +19,6 @@
 
 #include "locales.h"
 
-#include <KGlobal>
 #include <KLocale>
 #include <KConfig>
 #include <KConfigGroup>
@@ -31,33 +30,32 @@ LocaleAttached::LocaleAttached(QObject* parent)
 
 QStringList LocaleAttached::allLanguagesList() const
 {
-    return KGlobal::locale()->allLanguagesList();
+    return KLocale::global()->allLanguagesList();
 }
 
 QStringList LocaleAttached::allCountriesList() const
 {
-    return KGlobal::locale()->allCountriesList();
+    return KLocale::global()->allCountriesList();
 }
 
 QStringList LocaleAttached::installedLanguages() const
 {
-    return KGlobal::locale()->installedLanguages();
+    return KLocale::global()->installedLanguages();
 }
 
 QString LocaleAttached::languageCodeToName(const QString& code) const
 {
-    return KGlobal::locale()->languageCodeToName(code);
+    return KLocale::global()->languageCodeToName(code);
 }
 
 QString LocaleAttached::countryCodeToName(const QString& code) const
 {
-    return KGlobal::locale()->countryCodeToName(code);
+    return KLocale::global()->countryCodeToName(code);
 }
-
 
 void LocaleAttached::setLanguage(const QString& languageName)
 {
-    KGlobal::locale()->setLanguage(languageName, 0);
+    KLocale::global()->setLanguage(languageName, 0);
 }
 
 QStringList LocaleAttached::languagesForCountry(const QString& countryCode)
@@ -89,4 +87,3 @@ LocaleAttached* Locale::qmlAttachedProperties(QObject* parent)
 {
     return new LocaleAttached(parent);
 }
-

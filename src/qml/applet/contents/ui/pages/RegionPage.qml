@@ -39,7 +39,7 @@ Page
                 return;
             }
 
-            var detectedLocation = data["city"] + ", " + data["country"];
+            var detectedLocation = data["country code"].toLowerCase();
             populateModel(detectedLocation);
         }
 
@@ -165,7 +165,7 @@ Page
         iconSource: "preferences-desktop-time";
 
         onClicked: {
-            // NOTE: This does nothing atm, because kcm_keyboard is not ported to Plasma.Next
+            // NOTE: This does nothing atm, because kcm_clock is not ported to Plasma.Next
             ToolInvocation.startServiceByDesktopName("clock");
         }
     }
@@ -174,19 +174,24 @@ Page
     {
         console.log("RegionPage::populateModel: detected region:" + detectedRegion);
         var index = 0;
-        GlobalLocale.allCountriesList().map(function(code) {
+        var allCountries = GlobalLocale.allCountriesList();
+        console.log("All countries:" + allCountries);
+        allCountries.map(function(code) {
+            console.log("Got country:" + code);
             var name = GlobalLocale.countryCodeToName(code);
+            console.log("Got country name:" + name);
             return { "code": code,
                      "country":  name || code,
-                     "flag": GlobalLocale.flagForCountry(code),
+                     "flag": GlobalLocale.flagForCountry(code)
                    };
         })
         .sort(function(a, b) {
             return a.country.localeCompare(b.country);
         })
         .forEach(function(region) {
+            console.debug("Adding country:" + code);
             model.append(region);
-            if (region.country == detectedRegion) {
+            if (region.code == detectedRegion) {
                 regionsListView.currentIndex = index;
             }
             index++;
