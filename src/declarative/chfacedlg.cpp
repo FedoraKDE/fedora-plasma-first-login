@@ -30,6 +30,7 @@
 #include <QCheckBox>
 #include <QFileInfo>
 #include <QDebug>
+#include <QStandardPaths>
 
 #include <KLocalizedString>
 #include <KFileDialog>
@@ -42,18 +43,20 @@
 static const int CFG_faceSize = 96;
 
 ChFaceDlg::ChFaceDlg(QWidget *parent)
-    : KDialog( parent )
+    : KDialog(parent)
 {
-    m_faceDirs = KGlobal::dirs()->findDirs("data", QLatin1String("kdm/pics/users/"));
+    m_faceDirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation,
+                                           QLatin1String("kdm/pics/users/"),
+                                           QStandardPaths::LocateDirectory);
     m_faceDirs.append(QLatin1String("/usr/share/pixmaps/faces/")); // gdm stuff, will be checked if exists ;)
     qDebug() << "face dirs:" << m_faceDirs;
 
-    setCaption( i18nc("@title:window", "Change your Face") );
-    setButtons( Ok|Cancel|User1|User2 );
+    setCaption(i18nc("@title:window", "Change your Face"));
+    setButtons(Ok|Cancel|User1|User2);
     setDefaultButton( Cancel );
 
-    setButtonText( User1, i18n("Custom Image...") );
-    setButtonText( User2, i18n("Remove Image") );
+    setButtonText(User1, i18n("Custom Image..."));
+    setButtonText(User2, i18n("Remove Image"));
 
     QWidget *faceDlg = new QWidget;
     ui.setupUi(faceDlg);
@@ -110,7 +113,9 @@ void ChFaceDlg::addCustomPixmap( const QString &imPath, bool saveCopy )
 
     if ( saveCopy ) {
         // If we should save a copy
-        const QString saveLocation = KGlobal::dirs()->saveLocation("data", QLatin1String("kdm/pics/users/"));
+        const QString saveLocation = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                            QLatin1String("kdm/pics/users"),
+                                                            QStandardPaths::LocateDirectory);
         pix.save(saveLocation + fi.completeBaseName() + QLatin1String(".png"), "PNG");
     }
 
@@ -127,7 +132,7 @@ void ChFaceDlg::slotGetCustomImage()
     KFileDialog dlg(KGlobalSettings::picturesPath(), KImageIO::pattern(KImageIO::Reading), this, checkWidget);
 
     dlg.setOperationMode( KFileDialog::Opening );
-    dlg.setCaption( i18nc("@title:window", "Choose Image") );
+    dlg.setWindowTitle( i18nc("@title:window", "Choose Image") );
     dlg.setMode(KFile::File | KFile::LocalOnly | KFile::ExistingOnly);
 
     if (dlg.exec() == QDialog::Accepted)

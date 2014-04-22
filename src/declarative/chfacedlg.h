@@ -31,7 +31,7 @@
 
 #include <KDialog>
 
-#include "ui_faceDlg.h"
+#include "ui_chfacedlg.h"
 
 class ChFaceDlg : public KDialog
 {

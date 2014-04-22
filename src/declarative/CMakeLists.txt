@@ -1,9 +1,15 @@
+include_directories(${PackageKitQt5_INCLUDE_DIR})
+
 set(declarative_SRCS
     firstloginplugin.cpp
     toolinvocation.cpp
     locales.cpp
     standardpaths.cpp
+    user.cpp
+    chfacedlg.cpp
 )
+
+qt5_wrap_ui(declarative_SRCS chfacedlg.ui)
 
 add_library(firstloginplugin SHARED ${declarative_SRCS})
 target_link_libraries(firstloginplugin
@@ -11,6 +17,7 @@ target_link_libraries(firstloginplugin
         KF5::Service # KToolInvocation
         KF5::KDE4Support # KLocale
         KF5::ConfigCore # Locales
+#        ${PackageKitQt5_LIBRARIES} # PackageKit integration
 )
 
 install(TARGETS firstloginplugin DESTINATION ${QML_INSTALL_DIR}/org/fedoraproject/kde/FirstLogin)
