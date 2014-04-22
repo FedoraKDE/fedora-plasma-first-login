@@ -92,6 +92,7 @@ Window  {
             Text {
                 id: fileText;
                 text: fileBaseName;
+                anchors.horizontalCenter: parent.horizontalCenter;
             }
         }
 
