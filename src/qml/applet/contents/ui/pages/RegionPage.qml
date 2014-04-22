@@ -158,7 +158,6 @@ Page
         anchors {
             bottom: parent.bottom;
             left: parent.left;
-            right: parent.right;
         }
 
         text: i18n("Date & Time Settings...");

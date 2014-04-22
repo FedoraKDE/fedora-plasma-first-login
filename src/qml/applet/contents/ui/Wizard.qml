@@ -32,8 +32,7 @@ Item {
         if (isLastPage) {
             Qt.quit();
             console.log("Wizard::finish");
-        }
-        else if (currentPageId < pages.length) {
+        } else if (currentPageId < pages.length) {
             currentPageId++;
             pages[currentPageId].status = 1; // Active
             console.log("Wizard::next");

@@ -36,9 +36,6 @@
 #include <KFileDialog>
 #include <KImageIO>
 #include <KMessageBox>
-#include <KUrl>
-#include <KStandardDirs>
-#include <KGlobalSettings>
 
 static const int CFG_faceSize = 96;
 
@@ -53,7 +50,7 @@ ChFaceDlg::ChFaceDlg(QWidget *parent)
 
     setCaption(i18nc("@title:window", "Change your Face"));
     setButtons(Ok|Cancel|User1|User2);
-    setDefaultButton( Cancel );
+    setDefaultButton(Cancel);
 
     setButtonText(User1, i18n("Custom Image..."));
     setButtonText(User2, i18n("Remove Image"));
@@ -129,7 +126,7 @@ void ChFaceDlg::slotGetCustomImage()
 {
     QCheckBox* checkWidget = new QCheckBox(i18n("&Save copy in custom faces folder for future use"), this);
 
-    KFileDialog dlg(KGlobalSettings::picturesPath(), KImageIO::pattern(KImageIO::Reading), this, checkWidget);
+    KFileDialog dlg(QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first(), KImageIO::pattern(KImageIO::Reading), this, checkWidget);
 
     dlg.setOperationMode( KFileDialog::Opening );
     dlg.setWindowTitle( i18nc("@title:window", "Choose Image") );

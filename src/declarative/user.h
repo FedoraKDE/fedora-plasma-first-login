@@ -41,7 +41,7 @@ class User : public QObject
                WRITE setOrganization)
     Q_PROPERTY(QString email
                READ email
-               WRITE setEmail);
+               WRITE setEmail)
     Q_PROPERTY(QString location
                READ location
                WRITE setLocation)

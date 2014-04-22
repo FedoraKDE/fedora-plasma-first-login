@@ -37,5 +37,5 @@ void FirstLoginPlugin::registerTypes(const char* uri)
     qmlRegisterType<Locale>(uri, 1, 0, "GlobalLocale");
     qmlRegisterType<StandardPaths>(uri, 1, 0, "StandardPaths");
     qmlRegisterType<User>(uri, 1, 0, "User");
-    qmlRegisterType<ChFaceDlg>(uri, 1, 0, "ChFaceDlg");
+    //qmlRegisterType<ChFaceDlg>(uri, 1, 0, "ChFaceDlg");
 }

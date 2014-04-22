@@ -19,7 +19,7 @@
  */
 
 import QtQuick 2.0
-import QtQuick.Layouts 1.0
+import QtQuick.Layouts 1.1
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.fedoraproject.kde.FirstLogin 1.0
@@ -54,7 +54,7 @@ Page
         }
     }
 
-    ChFaceDlg {
+    ChgFaceDlg {
         id: chFaceDlg;
     }
 
@@ -88,17 +88,18 @@ Page
         PlasmaComponents.Button {
             iconSource: user.avatarPath;
 
-            minimumWidth: 74;
-            minimumHeight: 74;
-            width: 74;
-            height: 74;
+            minimumWidth: 96;
+            minimumHeight: 96;
+            width: 96;
+            height: 96;
 
             Layout.columnSpan: 2;
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter;
-            Layout.maximumHeight: 80;
+            Layout.maximumHeight: 100;
 
             onClicked: {
-                chFaceDlg.exec();
+                locationBusyIndicator.running = false; // stop the busy indicator to prevent a crash
+                chFaceDlg.open();
                 var str = user.avatarPath;
                 user.avatarPath = str;
             }
@@ -161,7 +162,7 @@ Page
 
         PlasmaComponents.TextField {
             id: locationText;
-            enabled: !locationBusyIndicator.active;
+            enabled: !locationBusyIndicator.running;
 
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter;
             Layout.fillWidth: true;
@@ -183,12 +184,11 @@ Page
 
     PlasmaComponents.Button {
         id: changePwButton;
-        text: "Change Password...";
+        text: i18n("Change Password...");
         iconSource: "preferences-desktop-user-password";
 
         anchors {
             left: parent.left;
-            right: parent.right;
             bottom: parent.bottom;
         }
 

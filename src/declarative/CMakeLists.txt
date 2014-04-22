@@ -6,10 +6,10 @@ set(declarative_SRCS
     locales.cpp
     standardpaths.cpp
     user.cpp
-    chfacedlg.cpp
+    #chfacedlg.cpp
 )
 
-qt5_wrap_ui(declarative_SRCS chfacedlg.ui)
+#qt5_wrap_ui(declarative_SRCS chfacedlg.ui)
 
 add_library(firstloginplugin SHARED ${declarative_SRCS})
 target_link_libraries(firstloginplugin

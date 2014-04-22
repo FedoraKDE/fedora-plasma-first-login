@@ -31,7 +31,6 @@ App
                 source: "WelcomePage.qml";
                 status: 1; // FIXME: This should be generic
             },
-
             PageInfo {
                 title: i18n("Languages");
                 source: "LanguagePage.qml";

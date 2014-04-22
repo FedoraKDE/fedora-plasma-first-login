@@ -37,7 +37,7 @@ User::User(QObject* parent)
     , mUserIface(0)
 {
     QDBusReply<QDBusObjectPath> reply = mAccountManager.asyncCall(QLatin1String("FindUserById"),
-                                                                  static_cast<qint64>(mUser.uid()));
+                                                                  static_cast<qint64>(mUser.userId().nativeId()));
     if (reply.isValid()) {
         const QString userPath = reply.value().path();
         mUserIface = new QDBusInterface(QLatin1String("org.freedesktop.Accounts"),
@@ -124,4 +124,3 @@ QString User::location() const
 
     return QString();
 }
-
