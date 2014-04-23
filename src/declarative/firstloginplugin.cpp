@@ -25,8 +25,6 @@
 #include "locales.h"
 #include "standardpaths.h"
 #include "user.h"
-#include "chfacedlg.h"
-
 
 void FirstLoginPlugin::registerTypes(const char* uri)
 {
