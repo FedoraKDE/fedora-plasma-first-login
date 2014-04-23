@@ -32,7 +32,8 @@ class User : public QObject
 
     Q_PROPERTY(QString avatarPath
                READ avatarPath
-               WRITE setAvatarPath)
+               WRITE setAvatarPath
+               NOTIFY avatarChanged)
     Q_PROPERTY(QString fullName
                READ fullName
                WRITE setFullName)
@@ -51,6 +52,8 @@ class User : public QObject
 
     QString avatarPath() const;
     void setAvatarPath(const QString &avatarPath);
+    Q_INVOKABLE bool removeAvatar();
+    Q_INVOKABLE bool copyAvatar(const QString &newAvatar);
 
     QString fullName() const;
     void setFullName(const QString &fullName);
@@ -63,6 +66,9 @@ class User : public QObject
 
     QString location() const;
     void setLocation(const QString &location);
+
+Q_SIGNALS:
+    void avatarChanged();
 
   private:
     KUser mUser;

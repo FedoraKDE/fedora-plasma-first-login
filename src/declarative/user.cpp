@@ -23,6 +23,8 @@
 #include <QDBusConnection>
 #include <QDBusReply>
 #include <QDebug>
+#include <QFile>
+#include <QDir>
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -56,6 +58,21 @@ void User::setAvatarPath(const QString& avatarPath)
     if (mUserIface) {
         mUserIface->asyncCall(QLatin1String("SetIconFile"), avatarPath);
     }
+
+    Q_EMIT avatarChanged();
+}
+
+bool User::removeAvatar()
+{
+    QFile::remove(QDir::homePath() + QLatin1String("/.face"));
+    return QFile::remove(QDir::homePath() + QLatin1String("/.face.icon"));
+}
+
+bool User::copyAvatar(const QString &newAvatar)
+{
+    removeAvatar();
+    QFile::copy(newAvatar, QDir::homePath() + QLatin1String("/.face")); // gdm compat :S
+    return QFile::copy(newAvatar, QDir::homePath() + QLatin1String("/.face.icon"));
 }
 
 QString User::avatarPath() const
@@ -70,7 +87,6 @@ void User::setEmail(const QString& email)
         mUserIface->asyncCall(QLatin1String("SetEmail"), email);
     }
 }
-
 
 QString User::email() const
 {

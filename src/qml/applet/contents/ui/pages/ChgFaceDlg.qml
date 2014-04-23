@@ -22,6 +22,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 import QtQuick.Controls 1.1
 import Qt.labs.folderlistmodel 2.1
+import org.fedoraproject.kde.FirstLogin 1.0
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
@@ -33,6 +34,24 @@ Window  {
     flags: Qt.Dialog;
     width: 400; height: 320;
     color: theme.backgroundColor;
+
+    property bool isAccepted: false;
+
+    signal accepted();
+    signal rejected();
+
+    onVisibilityChanged: {
+        if (visibility == 0 /*QWindow.Hidden*/) {
+            if (isAccepted)
+                accepted();
+            else
+                rejected();
+        }
+    }
+
+    User {
+        id: user;
+    }
 
     // intro label
     PlasmaComponents.Label {
@@ -83,7 +102,7 @@ Window  {
         delegate: Column  {
             Image {
                 id: fileImg;
-                source: fileURL;
+                source: filePath;
                 width: 80;
                 height: 80;
                 fillMode: Image.PreserveAspectFit;
@@ -125,6 +144,17 @@ Window  {
             margins: 4;
         }
 
+        PlasmaComponents.Button {
+            id: removeButton;
+
+            text: i18n("Remove");
+            onClicked: {
+                user.removeAvatar();
+                isAccepted = true;
+                close();
+            }
+        }
+
         Rectangle {
             Layout.fillWidth: true;
             width: 1;
@@ -135,22 +165,30 @@ Window  {
             enabled: folderModel.currentIndex != -1;
 
             text: i18n("OK");
-            onClicked: close();
+            onClicked: {
+                saveFaceImage();
+                isAccepted = true;
+                close();
+            }
         }
 
         PlasmaComponents.Button {
             id: cancelButton;
 
             text: i18n("Cancel");
-            onClicked: close();
+            onClicked: {
+                isAccepted = false;
+                close();
+            }
         }
     }
 
-    function open() {
-        chgFaceDlg.visible = true;
-    }
-
-    function close() {
-        chgFaceDlg.visible = false;
+    function saveFaceImage() {
+        if (gridView.currentItem) {
+            console.log("Current index: " + gridView.currentIndex);
+            var newAvatarPath = folderModel.get(gridView.currentIndex, "filePath");
+            console.log("Saving user avatar: " + newAvatarPath);
+            user.copyAvatar(newAvatarPath);
+        }
     }
 }

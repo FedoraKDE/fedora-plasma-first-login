@@ -20,6 +20,8 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
+import QtQuick.Controls 1.1
+
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.fedoraproject.kde.FirstLogin 1.0
@@ -56,6 +58,12 @@ Page
 
     ChgFaceDlg {
         id: chFaceDlg;
+
+        onAccepted: {
+            console.log("User accepted dlg");
+            btnImage.source = "";
+            btnImage.source = user.avatarPath;
+        }
     }
 
     PlasmaComponents.Label {
@@ -85,26 +93,31 @@ Page
         rowSpacing: 30;
         columns: 2;
 
-        PlasmaComponents.Button {
-            iconSource: user.avatarPath;
+        Button {
+            implicitWidth: 96;
+            implicitHeight: 96;
+            tooltip: i18n("Click to change your user picture");
 
-            minimumWidth: 96;
-            minimumHeight: 96;
-            width: 96;
-            height: 96;
+            Image {
+                id: btnImage;
+                cache: false;
+                anchors.fill: parent;
+                anchors.margins: 4;
+                fillMode: Image.PreserveAspectFit;
+                smooth: true;
+                source: user.avatarPath;
+            }
 
             Layout.columnSpan: 2;
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter;
             Layout.maximumHeight: 100;
 
             onClicked: {
+                console.log("Initial avatar path:" + user.avatarPath);
                 locationBusyIndicator.running = false; // stop the busy indicator to prevent a crash
-                chFaceDlg.open();
-                var str = user.avatarPath;
-                user.avatarPath = str;
+                chFaceDlg.show();
             }
         }
-
 
 
         PlasmaComponents.Label {
