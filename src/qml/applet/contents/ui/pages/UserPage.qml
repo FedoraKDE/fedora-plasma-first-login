@@ -49,6 +49,8 @@ Page
         }
 
         Component.onCompleted: {
+            timer.start();
+
             if (sources.indexOf("location") == -1) {
                 locationText.text = detectedLocation;
                 locationBusyIndicator.running = false;
@@ -56,11 +58,19 @@ Page
         }
     }
 
+    Timer {
+        id: timer;
+        interval: 5000; // 5 sec
+        onTriggered: {
+            locationBusyIndicator.running = false; // stop the timer from spinning endlessly
+        }
+    }
+
     ChgFaceDlg {
         id: chFaceDlg;
 
         onAccepted: {
-            console.log("User accepted dlg");
+            //console.log("User accepted dlg");
             btnImage.source = "";
             btnImage.source = user.avatarPath;
         }
@@ -160,6 +170,7 @@ Page
         PlasmaComponents.TextField {
             id: locationText;
             enabled: !locationBusyIndicator.running;
+            text: user.location;
 
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter;
             Layout.fillWidth: true;

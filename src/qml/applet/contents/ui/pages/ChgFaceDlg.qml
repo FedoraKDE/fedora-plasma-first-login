@@ -161,7 +161,7 @@ Window  {
 
             text: i18n("Custom Image...");
             onClicked: {
-                fileDialog.visible = true;
+                fileDialog.open();
             }
         }
 
