@@ -24,9 +24,8 @@
 
 #include <QDBusInterface>
 #include <KUser>
-#include <KEMailSettings>
 
-class User : public QObject
+class User: public QObject
 {
     Q_OBJECT
 
@@ -37,9 +36,6 @@ class User : public QObject
     Q_PROPERTY(QString fullName
                READ fullName
                WRITE setFullName)
-    Q_PROPERTY(QString organization
-               READ organization
-               WRITE setOrganization)
     Q_PROPERTY(QString email
                READ email
                WRITE setEmail)
@@ -58,9 +54,6 @@ class User : public QObject
     QString fullName() const;
     void setFullName(const QString &fullName);
 
-    QString organization() const;
-    void setOrganization(const QString &organization);
-
     QString email() const;
     void setEmail(const QString &email);
 
@@ -74,7 +67,6 @@ Q_SIGNALS:
     KUser mUser;
     QDBusInterface mAccountManager;
     QDBusInterface *mUserIface;
-    KEMailSettings mEmail;
 };
 
 #endif // USER_H

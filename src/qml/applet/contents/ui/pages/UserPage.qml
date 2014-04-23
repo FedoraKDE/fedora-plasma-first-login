@@ -137,22 +137,6 @@ Page
 
 
         PlasmaComponents.Label {
-            text: i18n("Organization:");
-
-            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter;
-        }
-
-        PlasmaComponents.TextField {
-            id: organizationText;
-            text: user.organization;
-
-            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter;
-            Layout.fillWidth: true;
-        }
-
-
-
-        PlasmaComponents.Label {
             text: i18n("Email:");
 
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter;
@@ -214,7 +198,6 @@ Page
     {
         user.fullName = nameText.text;
         user.email = emailText.text;
-        user.organization = organizationText.text;
         user.location = locationText.text;
     }
 }

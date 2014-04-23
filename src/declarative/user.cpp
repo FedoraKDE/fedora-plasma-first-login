@@ -49,17 +49,14 @@ User::User(QObject* parent)
     } else {
         qWarning() << "Failed to find AccountService:" << reply.error().message();
     }
-
-    mEmail.setProfile(mEmail.defaultProfileName());
 }
 
 void User::setAvatarPath(const QString& avatarPath)
 {
     if (mUserIface) {
         mUserIface->asyncCall(QLatin1String("SetIconFile"), avatarPath);
+        Q_EMIT avatarChanged();
     }
-
-    Q_EMIT avatarChanged();
 }
 
 bool User::removeAvatar()
@@ -82,7 +79,6 @@ QString User::avatarPath() const
 
 void User::setEmail(const QString& email)
 {
-    mEmail.setSetting(KEMailSettings::EmailAddress, email);
     if (mUserIface) {
         mUserIface->asyncCall(QLatin1String("SetEmail"), email);
     }
@@ -90,12 +86,15 @@ void User::setEmail(const QString& email)
 
 QString User::email() const
 {
-    return mEmail.getSetting(KEMailSettings::EmailAddress);
+    if (mUserIface) {
+        return mUserIface->property("Email").toString();
+    }
+
+    return QString();
 }
 
 void User::setFullName(const QString& fullName)
 {
-    mEmail.setSetting(KEMailSettings::RealName, fullName);
     if (mUserIface) {
         mUserIface->asyncCall(QLatin1String("SetRealName"), fullName);
     }
@@ -103,23 +102,17 @@ void User::setFullName(const QString& fullName)
 
 QString User::fullName() const
 {
-    // 1st try KEMailSettings, then KUser
-    const QString result = mEmail.getSetting(KEMailSettings::RealName);
+    // 1st try Accounts, then KUser
+    QString result;
+    if (mUserIface) {
+        result = mUserIface->property("RealName").toString();
+    }
+
     if (result.isEmpty()) {
         return mUser.property(KUser::FullName).toString();
     }
 
     return result;
-}
-
-void User::setOrganization(const QString& organization)
-{
-    mEmail.setSetting(KEMailSettings::Organization, organization);
-}
-
-QString User::organization() const
-{
-    return mEmail.getSetting(KEMailSettings::Organization);
 }
 
 void User::setLocation(const QString& location)
@@ -132,10 +125,7 @@ void User::setLocation(const QString& location)
 QString User::location() const
 {
     if (mUserIface) {
-        QDBusReply<QString> reply = mUserIface->asyncCall(QLatin1String("Location"));
-        if (reply.isValid()) {
-            return reply;
-        }
+        return mUserIface->property("Location").toString();
     }
 
     return QString();
