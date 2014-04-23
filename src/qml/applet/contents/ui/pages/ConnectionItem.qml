@@ -252,7 +252,6 @@ PlasmaComponents.ListItem {
             when: visiblePasswordDialog;
             StateChangeScript { script: createContent(); }
             PropertyChanges { target: stateChangeButton; visible: true; }
-            PropertyChanges { target: connectionItem; enabled: false; }
         }
     ]
 
