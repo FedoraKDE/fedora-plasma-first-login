@@ -21,6 +21,7 @@ import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 import QtQuick.Controls 1.1
+import QtQuick.Dialogs 1.1
 import Qt.labs.folderlistmodel 2.1
 import org.fedoraproject.kde.FirstLogin 1.0
 
@@ -32,7 +33,7 @@ Window  {
     title: i18n("Change your user picture");
     modality: Qt.ApplicationModal;
     flags: Qt.Dialog;
-    width: 400; height: 320;
+    width: 500; height: 400;
     color: theme.backgroundColor;
 
     property bool isAccepted: false;
@@ -155,6 +156,15 @@ Window  {
             }
         }
 
+        PlasmaComponents.Button {
+            id: customButton;
+
+            text: i18n("Custom Image...");
+            onClicked: {
+                fileDialog.visible = true;
+            }
+        }
+
         Rectangle {
             Layout.fillWidth: true;
             width: 1;
@@ -183,6 +193,26 @@ Window  {
         }
     }
 
+    FileDialog {
+        id: fileDialog
+        title: i18n("Please choose an image");
+        nameFilters: ["*.jpg", "*.jpeg", "*.png"];
+        folder: "/usr/share/pixmaps/faces/";
+        selectMultiple: false;
+        selectExisting: true;
+        onAccepted: {
+            console.log("You chose: " + fileDialog.fileUrl);
+            addExtraAvatar(fileDialog.fileUrl);
+            isAccepted = true;
+            close();
+        }
+        onRejected: {
+            console.log("File dlg canceled");
+            isAccepted = false;
+            close();
+        }
+    }
+
     function saveFaceImage() {
         if (gridView.currentItem) {
             console.log("Current index: " + gridView.currentIndex);
@@ -190,5 +220,10 @@ Window  {
             console.log("Saving user avatar: " + newAvatarPath);
             user.copyAvatar(newAvatarPath);
         }
+    }
+
+    function addExtraAvatar(path) {
+        console.log("Saving extra avatar: " + path);
+        user.copyAvatar(path);
     }
 }
