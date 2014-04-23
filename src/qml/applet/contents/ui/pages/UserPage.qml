@@ -44,7 +44,7 @@ Page
             }
 
             var detectedLocation = data["city"] + ", " + data["country"];
-            locationText.text = detectedLocation;
+            locationText.text = detectedLocation.trim();
             locationBusyIndicator.running = false;
         }
 
