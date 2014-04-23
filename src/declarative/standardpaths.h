@@ -31,6 +31,7 @@ class StandardPathsAttached: public QObject
 
   public:
     Q_INVOKABLE QString appData(const QString &resource, bool isFile = true);
+    Q_INVOKABLE QString avatarsDir();
 
   friend class StandardPaths;
 };

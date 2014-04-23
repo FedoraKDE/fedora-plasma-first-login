@@ -95,7 +95,7 @@ Window  {
             showFiles: true;
             showOnlyReadable: true;
             sortField: FolderListModel.Name;
-            folder: "/usr/share/pixmaps/faces/" // TODO export the right directory from C++
+            folder: StandardPaths.avatarsDir();
         }
 
         model: folderModel

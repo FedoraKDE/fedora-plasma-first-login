@@ -25,6 +25,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QDir>
+#include <QStandardPaths>
 
 #include <unistd.h>
 #include <sys/types.h>

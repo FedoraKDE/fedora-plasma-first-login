@@ -34,6 +34,11 @@ QString StandardPathsAttached::appData(const QString& resource, bool isFile)
                                          : QStandardPaths::LocateDirectory);
 }
 
+QString StandardPathsAttached::avatarsDir()
+{
+    return QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kde4/apps/kdm/pics/users"), QStandardPaths::LocateDirectory);
+}
+
 StandardPaths::StandardPaths(QObject* parent)
     : QObject(parent)
 {
@@ -43,4 +48,3 @@ StandardPathsAttached* StandardPaths::qmlAttachedProperties(QObject* parent)
 {
     return new StandardPathsAttached(parent);
 }
-
