@@ -25,12 +25,12 @@ App
     wizard: Wizard {
 
         pages: [
+
             PageInfo {
                 title: i18n("Welcome");
                 source: "WelcomePage.qml";
                 status: 1; // FIXME: This should be generic
             },
-
             PageInfo {
                 title: i18n("Languages");
                 source: "LanguagePage.qml";
@@ -49,6 +49,11 @@ App
             PageInfo {
                 title: i18n("Network setting");
                 source: "NetworkPage.qml";
+            },
+
+            PageInfo {
+                title: i18n("User Details");
+                source: "UserPage.qml"
             }
 
         ]

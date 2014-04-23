@@ -24,7 +24,7 @@
 #include "toolinvocation.h"
 #include "locales.h"
 #include "standardpaths.h"
-
+#include "user.h"
 
 void FirstLoginPlugin::registerTypes(const char* uri)
 {
@@ -34,4 +34,5 @@ void FirstLoginPlugin::registerTypes(const char* uri)
     // Prevent conflict with "Locale" type (????)
     qmlRegisterType<Locale>(uri, 1, 0, "GlobalLocale");
     qmlRegisterType<StandardPaths>(uri, 1, 0, "StandardPaths");
+    qmlRegisterType<User>(uri, 1, 0, "User");
 }

@@ -153,19 +153,13 @@ Page
     PlasmaComponents.SectionScroller {
         listView: languagesListView;
     }
-/*
-    PlasmaComponents.ScrollBar {
-        flickableItem: languagesListView;
-        interactive :true;
-    }
-*/
+
     PlasmaComponents.Button {
         id: keyboardSetupButton;
 
         anchors {
             bottom: parent.bottom;
             left: parent.left;
-            right: parent.right;
         }
 
         text: i18n("Setup Keyboard...");

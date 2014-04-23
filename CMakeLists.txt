@@ -12,7 +12,6 @@ add_definitions(-DFPFL_VERSION="\\\"${FPFL_VERSION_STRING}\\\"")
 
 find_package(ECM 0.0.11 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
-
 set(CMAKE_AUTOMOC ON)
 
 include(KDEInstallDirs)
@@ -38,8 +37,8 @@ find_package(KF5 CONFIG REQUIRED COMPONENTS
     Config
 )
 
-# FIXME: Need Qt 5 version!
-#find_package(packagekit-qt2 REQUIRED)
+# http://copr.fedoraproject.org/coprs/dvratil/PackageKit-Qt5/
+find_package(packagekitqt5 REQUIRED)
 
 add_definitions(
     -DQT_NO_CAST_FROM_ASCII
@@ -58,8 +57,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMP
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra")
 endif()
 
-
-include_directories(${PACKAGEKIT_QT2_INCLUDE_DIR})
 
 add_subdirectory(src)
 

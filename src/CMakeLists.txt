@@ -19,7 +19,6 @@ target_link_libraries(fedora-plasma-first-login
     KF5::Plasma
     KF5::Service  # Plasma dependency
     KF5::KDE4Support # Plasma dependency
-    #${PACKAGEKIT_QT2_LIBRARIES}      #FIXME: Needs Qt 5 version
 )
 
 install(TARGETS fedora-plasma-first-login ${INSTALL_TARGETS_DEFAULT_ARGS})
