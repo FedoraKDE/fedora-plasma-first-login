@@ -19,16 +19,16 @@
 
 #include "toolinvocation.h"
 
-#include <KToolInvocation>
+#include <QProcess>
 
 ToolInvocationAttached::ToolInvocationAttached(QObject* parent)
     : QObject(parent)
 {
 }
 
-void ToolInvocationAttached::startServiceByDesktopName(const QString& desktopName)
+void ToolInvocationAttached::startDetached(const QString &cmdLine, const QStringList &args)
 {
-    KToolInvocation::startServiceByDesktopName(desktopName);
+    QProcess::startDetached(cmdLine, args);
 }
 
 

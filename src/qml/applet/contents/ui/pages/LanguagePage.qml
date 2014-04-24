@@ -166,8 +166,7 @@ Page
         iconSource: "preferences-desktop-keyboard";
 
         onClicked: {
-            // NOTE: This does nothing atm, because kcm_keyboard is not ported to Plasma.Next
-            ToolInvocation.startServiceByDesktopName("kcm_keyboard");
+            ToolInvocation.startDetached("kcmshell5", "kcm_keyboard");
         }
     }
 

@@ -165,7 +165,7 @@ Page
 
         onClicked: {
             // NOTE: This does nothing atm, because kcm_clock is not ported to Plasma.Next
-            ToolInvocation.startServiceByDesktopName("clock");
+            ToolInvocation.startDetached("kcmshell5", "clock");
         }
     }
 

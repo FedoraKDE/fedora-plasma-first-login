@@ -30,7 +30,7 @@ class ToolInvocationAttached: public QObject
     explicit ToolInvocationAttached(QObject *parent = 0);
 
   public:
-    Q_INVOKABLE void startServiceByDesktopName(const QString &desktopName);
+    Q_INVOKABLE void startDetached(const QString &cmdLine, const QStringList & args = QStringList());
 
   friend class ToolInvocation;
 };
