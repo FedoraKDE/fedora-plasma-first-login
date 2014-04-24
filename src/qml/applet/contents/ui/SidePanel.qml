@@ -70,7 +70,7 @@ PlasmaCore.FrameSvgItem {
                     id: itemIcon;
                     source: wizard.pages[index].status == 1 ? "go-next" :
                             wizard.pages[index].status == 2 ? "dialog-ok-apply" :
-                            wizard.pages[index].statis == 3 ? "dialog-ok" :
+                            wizard.pages[index].status == 3 ? "dialog-ok" :
                             "";
                     width: units.iconSizes.medium;
                     anchors {
