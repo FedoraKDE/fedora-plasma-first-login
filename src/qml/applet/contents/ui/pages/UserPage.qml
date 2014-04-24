@@ -201,7 +201,7 @@ Page
         }
 
         onClicked: {
-            ToolInvocation.startServiceByDesktopName("kdepasswd");
+            ToolInvocation.startDetached("kdepasswd");
         }
     }
 
