@@ -88,6 +88,13 @@ Window  {
             margins: 4;
         }
 
+        Keys.onEscapePressed: {
+            event.accepted = true;
+            //console.log("ESC KEY PRESSED " + event.key);
+            isAccepted = false;
+            close();
+        }
+
         FolderListModel {
             id: folderModel;
             nameFilters: ["*.jpg", "*.jpeg", "*.png"];
