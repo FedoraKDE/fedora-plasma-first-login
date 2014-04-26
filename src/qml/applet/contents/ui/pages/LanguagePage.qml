@@ -46,7 +46,7 @@ Page
 
         Component.onCompleted: {
             if (sources.indexOf("location") == -1) {
-                populateModel();
+                populateModel("");
             }
         }
     }
