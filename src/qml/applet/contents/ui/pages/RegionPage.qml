@@ -164,7 +164,6 @@ Page
         iconSource: "preferences-desktop-time";
 
         onClicked: {
-            // NOTE: This does nothing atm, because kcm_clock is not ported to Plasma.Next
             ToolInvocation.startDetached("kcmshell5", "clock");
         }
     }
