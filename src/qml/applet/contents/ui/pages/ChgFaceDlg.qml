@@ -79,6 +79,7 @@ Window  {
         boundsBehavior: Flickable.StopAtBounds;
         focus: true;
         clip: true;
+        highlightRangeMode: GridView.ApplyRange;
 
         anchors {
             left: parent.left;
