@@ -194,6 +194,9 @@ Page
         })
         .forEach(function(region) {
             //console.debug("Adding country:" + region.code);
+            if (region.code == "C") {
+                return;
+            }
             model.append(region);
             if (region.code == detectedRegion) {
                 regionsListView.currentIndex = index;
