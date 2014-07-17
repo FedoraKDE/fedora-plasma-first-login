@@ -53,7 +53,7 @@ class LocaleAttached: public QObject
  * A simplified wrapper around KLocale.
  *
  * The wrapper is implemented as an attached property, which makes it possible
- * to use it as if it's method were static:
+ * to use it as if its methods were static:
  *
  * @code
  * var langs = GlobalLocale.allLanguagesList();

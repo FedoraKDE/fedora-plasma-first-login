@@ -61,7 +61,7 @@ void LocaleAttached::setLanguage(const QString& languageName)
 QStringList LocaleAttached::languagesForCountry(const QString& countryCode)
 {
     const QString localeConfig = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                        QString::fromLatin1("locale/l10n/%1/entry.desktop").arg(countryCode.toLower()));
+                                                        QString::fromLatin1("locale/l10n/%1/country.desktop").arg(countryCode.toLower()));
     if (localeConfig.isEmpty()) {
         return QStringList();
     }
@@ -74,7 +74,7 @@ QStringList LocaleAttached::languagesForCountry(const QString& countryCode)
 QString LocaleAttached::flagForCountry(const QString& countryCode)
 {
     return QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                  QString::fromLatin1("locale/l10n/%1/flag.png").arg(countryCode.toLower()));
+                                  QString::fromLatin1("kf5/locale/countries/%1/flag.png").arg(countryCode.toLower()));
 }
 
 
