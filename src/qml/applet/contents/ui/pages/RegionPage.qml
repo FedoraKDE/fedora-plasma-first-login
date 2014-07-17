@@ -106,14 +106,11 @@ Page
 
             property string countryCode: code;
 
-            PlasmaCore.IconItem {
+            Image {
                 id: itemIcon;
-
                 source: flag;
-                active: true;
-                smooth: true;
-                width: units.iconSizes.medium;
-                height: units.iconSizes.medium;
+                asynchronous: true;
+                fillMode: Image.PreserveAspectFit;
 
                 anchors {
                     left: parent.left;
@@ -173,11 +170,12 @@ Page
         console.log("RegionPage::populateModel: detected region:" + detectedRegion);
         var index = 0;
         var allCountries = GlobalLocale.allCountriesList();
-        console.log("All countries:" + allCountries);
+        //console.log("All countries:" + allCountries);
         allCountries.map(function(code) {
-            console.log("Got country:" + code);
+            //console.log("Got country:" + code);
             var name = GlobalLocale.countryCodeToName(code);
-            console.log("Got country name:" + name);
+            //console.log("Got country name:" + name);
+            //console.log("Got country flag:" + GlobalLocale.flagForCountry(code));
             return { "code": code,
                      "country":  name || code,
                      "flag": GlobalLocale.flagForCountry(code)
@@ -187,7 +185,7 @@ Page
             return a.country.localeCompare(b.country);
         })
         .forEach(function(region) {
-            console.debug("Adding country:" + code);
+            //console.debug("Adding country:" + region.code);
             model.append(region);
             if (region.code == detectedRegion) {
                 regionsListView.currentIndex = index;
@@ -196,10 +194,5 @@ Page
         });
         busyIndicator.running = false;
         busyIndicator.visible = false;
-    }
-
-    function addLanguagesToModel(langs, icon)
-    {
-
     }
 }
