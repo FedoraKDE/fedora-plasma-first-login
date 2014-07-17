@@ -22,6 +22,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.fedoraproject.kde.FirstLogin 1.0
 import ".."
 
@@ -50,18 +51,25 @@ Page
         }
     }
 
-    PlasmaComponents.Label {
-        id: label;
+    PlasmaExtras.Title {
+        id: title;
+        text: i18n("Region");
+    }
+
+    PlasmaExtras.Paragraph {
+        id: info;
+        text: i18n("Select your region below. This will apply the region's settings globally in KDE.");
         anchors {
-            top: parent.top;
-            left: parent.left;
-            right: parent.right;
+            top: title.bottom;
         }
-        wrapMode: Text.WordWrap;
-        textFormat: Text.StyledText;
-        verticalAlignment: Text.AlignJustify;
-        text: i18n("<p>Select your region below. This will apply the region's settings globally in KDE.</p><br/>" +
-                   "<p><em>Note:</em> If your country is auto-detected, it will be preselected.</p>");
+    }
+
+    PlasmaExtras.Paragraph {
+        id: note;
+        text: i18n("<b>Note:</b> If your country is auto-detected, it will be preselected.");
+        anchors {
+            top: info.bottom;
+        }
     }
 
     ListView {
@@ -72,7 +80,7 @@ Page
         currentIndex: -1;
 
         anchors {
-            top: label.bottom;
+            top: note.bottom;
             bottom: keyboardSetupButton.top;
             left: parent.left;
             right: parent.right;

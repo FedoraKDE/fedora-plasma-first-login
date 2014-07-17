@@ -23,6 +23,7 @@ import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.fedoraproject.kde.FirstLogin 1.0
 import ".."
 
@@ -40,29 +41,35 @@ Page
 
     PlasmaNM.AppletProxyModel {
         id: appletProxyModel;
-
         sourceModel: connectionModel;
     }
 
-    PlasmaComponents.Label {
-        id: label;
+    PlasmaExtras.Title {
+        id: title;
+        text: i18n("Network Settings");
+    }
+
+    PlasmaExtras.Paragraph {
+        id: info;
+        text: i18n("Below you can see the list of available networks to connect to.");
         anchors {
-            top: parent.top;
-            left: parent.left;
-            right: parent.right;
+            top: title.bottom;
         }
-        wrapMode: Text.WordWrap;
-        textFormat: Text.StyledText;
-        verticalAlignment: Text.AlignJustify;
-        text: i18n("<p>Below you can see the list of available networks to connect to.</p><br/>" +
-                   "<p><em>Note:</em> If no wireless connections show up, make sure to enable the Wifi kill switch. </p>");
+    }
+
+    PlasmaExtras.Paragraph {
+        id: note;
+        text: i18n("<b>Note:</b> If no wireless connections show up, make sure to enable the Wifi kill switch.");
+        anchors {
+            top: info.bottom;
+        }
     }
 
     ListView {
         id: networkListView;
 
         anchors {
-            top: label.bottom;
+            top: note.bottom;
             bottom: parent.bottom;
             left: parent.left;
             right: parent.right;

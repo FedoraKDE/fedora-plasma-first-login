@@ -32,7 +32,7 @@ App
                 status: 1; // FIXME: This should be generic
             },
             PageInfo {
-                title: i18n("Languages");
+                title: i18n("Language");
                 source: "LanguagePage.qml";
             },
 
@@ -47,7 +47,7 @@ App
             },
 
             PageInfo {
-                title: i18n("Network setting");
+                title: i18n("Network Settings");
                 source: "NetworkPage.qml";
             },
 

@@ -19,24 +19,34 @@
 
 import QtQuick 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 import ".."
 
 Page
 {
-    PlasmaComponents.Label {
-        id: label;
-
+    PlasmaExtras.Title {
+        id: title;
+        text: i18n("Welcome to Fedora Plasma!");
         anchors {
             verticalCenter: parent.verticalCenter;
-            left: parent.left;
-            right: parent.right;
         }
-        wrapMode: Text.WordWrap;
-        textFormat: Text.StyledText;
+    }
+
+    PlasmaExtras.Paragraph {
+        id: info;
+        text: i18n("This wizard will guide you through several steps to personalize your workspace.");
+        anchors {
+            top: title.bottom;
+        }
+    }
+
+    PlasmaExtras.Paragraph {
+        id: note;
+        text: i18n("You can skip any step and configure it later from System Settings. Alternatively, you can start this wizard again " +
+                   "from Application Launcher.");
         verticalAlignment: Text.AlignJustify;
-        text: i18n("<h1>Welcome to Fedora Plasma!</h1><br/>" +
-                   "<p>This wizard will guide you through several steps to personalize your workspace.</p><br/>" +
-                   "<p>You can skip any step and configure it later from System Settings. Alternatively, you can start this wizard again " +
-                   "from Application Launcher.</p>");
+        anchors {
+            top: info.bottom;
+        }
     }
 }

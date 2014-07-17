@@ -22,6 +22,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.fedoraproject.kde.FirstLogin 1.0
 import ".."
 
@@ -51,19 +52,26 @@ Page
         }
     }
 
-    PlasmaComponents.Label {
-        id: label;
+    PlasmaExtras.Title {
+        id: title;
+        text: i18n("Language");
+    }
+
+    PlasmaExtras.Paragraph {
+        id: info;
+        text: i18n("Select your language below. This will switch language of all KDE applications.");
         anchors {
-            top: parent.top;
-            left: parent.left;
-            right: parent.right;
+            top: title.bottom;
         }
-        wrapMode: Text.WordWrap;
-        textFormat: Text.StyledText;
-        verticalAlignment: Text.AlignJustify;
-        text: i18n("<p>Select your language below. This will switch language of all KDE applications.</p><br/>" +
-                   "<p><em>Note:</em> If your language is auto-detected, it will be placed first in the list and preselected. " +
-                    "If it's available but not installed currently, it will be automatically installed in the background.</p>");
+    }
+
+    PlasmaExtras.Paragraph {
+        id: note;
+        text: i18n("<b>Note:</b> If your language is auto-detected, it will be placed first in the list and preselected. " +
+                   "If it's available but not installed currently, it will be automatically installed in the background.");
+        anchors {
+            top: info.bottom;
+        }
     }
 
     ListView {
@@ -74,7 +82,7 @@ Page
         currentIndex: 0;
 
         anchors {
-            top: label.bottom;
+            top: note.bottom;
             bottom: keyboardSetupButton.top;
             left: parent.left;
             right: parent.right;
@@ -177,8 +185,8 @@ Page
         if (detectedLangs.length > 0) {
             addLanguagesToModel(detectedLangs, "favorites");
             var remainingLangs = allLangs.filter(function(lang) {
-                    return (detectedLangs.indexOf(lang) == -1);
-                });
+                return (detectedLangs.indexOf(lang) == -1);
+            });
             addLanguagesToModel(remainingLangs);
         } else {
             addLanguagesToModel(allLangs);
@@ -191,7 +199,7 @@ Page
     function addLanguagesToModel(langs, icon)
     {
         langs.map(function(code) {
-            return { "code": code, "name":  GlobalLocale.languageCodeToName(code) };
+            return { "code": code, "name": GlobalLocale.languageCodeToName(code) };
         })
         .sort(function(a, b) {
             return a.name.localeCompare(b.name);
@@ -202,11 +210,11 @@ Page
             }
 
             model.append(
-                { "icon": icon || "",
-                  "language": language.name,
-                  "code": language.code
-                }
-            );
+                        { "icon": icon || "",
+                            "language": language.name,
+                            "code": language.code
+                        }
+                        );
         });
     }
 }

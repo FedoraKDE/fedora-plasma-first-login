@@ -22,6 +22,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.fedoraproject.kde.FirstLogin 1.0
 import ".."
 
@@ -29,25 +30,32 @@ Page
 {
     id: page;
 
-    PlasmaComponents.Label {
-        id: label;
+    PlasmaExtras.Title {
+        id: title;
+        text: i18n("Color Theme");
+    }
+
+    PlasmaExtras.Paragraph {
+        id: info;
+        text: i18n("Select your prefered Plasma and color scheme using the buttons below.");
         anchors {
-            top: parent.top;
-            left: parent.left;
-            right: parent.right;
+            top: title.bottom;
         }
-        wrapMode: Text.WordWrap;
-        textFormat: Text.StyledText;
-        verticalAlignment: Text.AlignJustify;
-        text: i18n("<p>Select your prefered Plasma and color scheme using the buttons below.</p><br/>" +
-                   "<p>The preview image will adjust accordingly as you hover over those buttons.</p>");
+    }
+
+    PlasmaExtras.Paragraph {
+        id: note;
+        text: i18n("The preview image will adjust accordingly as you hover over those buttons.");
+        anchors {
+            top: info.bottom;
+        }
     }
 
     Item {
         anchors {
             left: parent.left;
             right: parent.right;
-            top: label.bottom;
+            top: note.bottom;
             bottom: buttonRow.top;
             bottomMargin: 20;
             topMargin: 20;

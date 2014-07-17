@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.fedoraproject.kde.FirstLogin 1.0
 import ".."
 
@@ -44,7 +45,8 @@ Page
             }
 
             var detectedLocation = data["city"] + ", " + data["country"];
-            locationText.text = detectedLocation.trim();
+            if (data && data["country]"])
+                locationText.text = detectedLocation.trim();
             locationBusyIndicator.running = false;
         }
 
@@ -76,25 +78,24 @@ Page
         }
     }
 
-    PlasmaComponents.Label {
-        id: label;
+    PlasmaExtras.Title {
+        id: title;
+        text: i18n("User Details");
+    }
 
+    PlasmaExtras.Paragraph {
+        id: info;
+        text: i18n("Customize your details below.");
         anchors {
-            left: parent.left;
-            right: parent.right;
-            top: parent.top;
+            top: title.bottom;
         }
-        wrapMode: Text.WordWrap;
-        textFormat: Text.StyledText;
-        verticalAlignment: Text.AlignJustify;
-        text: i18n("<p>Customize your details below.</p>");
     }
 
     GridLayout {
         anchors {
             left: parent.left;
             right: parent.right;
-            top: label.bottom;
+            top: info.bottom;
             bottom: changePwButton.top;
             topMargin: 20;
             bottomMargin: 20;
