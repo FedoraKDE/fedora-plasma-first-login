@@ -61,7 +61,7 @@ void LocaleAttached::setLanguage(const QString& languageName)
 QStringList LocaleAttached::languagesForCountry(const QString& countryCode)
 {
     const QString localeConfig = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                        QString::fromLatin1("locale/l10n/%1/country.desktop").arg(countryCode.toLower()));
+                                                        QString::fromLatin1("kf5/locale/countries/%1/country.desktop").arg(countryCode.toLower()));
     if (localeConfig.isEmpty()) {
         return QStringList();
     }
