@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.8.0)
 cmake_policy(SET CMP0005 NEW)
 
 set(FPFL_VERSION_MAJOR   0)
-set(FPFL_VERSION_MINOR   1)
+set(FPFL_VERSION_MINOR   2)
 set(FPFL_VERSION_RELEASE 0)
 set(FPFL_VERSION_STRING "${FPFL_VERSION_MAJOR}.${FPFL_VERSION_MINOR}.${FPFL_VERSION_RELEASE}")
 add_definitions(-DFPFL_VERSION="\\\"${FPFL_VERSION_STRING}\\\"")
@@ -32,7 +32,6 @@ find_package(Qt5 CONFIG REQUIRED COMPONENTS
 find_package(KF5 CONFIG REQUIRED COMPONENTS
     Plasma
     I18n
-    Service     # required by Plasma
     KDE4Support # required by Plasma
     Config
 )

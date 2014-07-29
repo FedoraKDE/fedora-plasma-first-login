@@ -17,7 +17,6 @@ target_link_libraries(fedora-plasma-first-login
     Qt5::Quick
     KF5::I18n
     KF5::Plasma
-    KF5::Service  # Plasma dependency
 )
 
 install(TARGETS fedora-plasma-first-login ${INSTALL_TARGETS_DEFAULT_ARGS})
