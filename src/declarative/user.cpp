@@ -27,12 +27,9 @@
 #include <QDir>
 #include <QStandardPaths>
 
-#include <unistd.h>
-#include <sys/types.h>
-
 User::User(QObject* parent)
     : QObject(parent)
-    , mUser(KUser(getuid()))
+    , mUser(KUser(KUserId::currentUserId()))
     , mAccountManager(QLatin1String("org.freedesktop.Accounts"),
                       QLatin1String("/org/freedesktop/Accounts"),
                       QLatin1String("org.freedesktop.Accounts"),
