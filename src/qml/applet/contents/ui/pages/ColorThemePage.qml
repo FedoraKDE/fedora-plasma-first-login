@@ -116,6 +116,9 @@ Page
                 onExited: {
                     darkThemeImage.opacity = lightThemeButton.checked ? 0.0 : 1.0;
                 }
+                onClicked: {
+                    lightThemeButton.checked = true;
+                }
             }
         }
 
@@ -138,6 +141,9 @@ Page
                 }
                 onExited: {
                     darkThemeImage.opacity = darkThemeButton.checked ? 1.0 : 0.0;
+                }
+                onClicked: {
+                    darkThemeButton.checked = true;
                 }
             }
         }
