@@ -42,7 +42,7 @@ class ToolInvocationAttached: public QObject
  * to use it as if its methods were static:
  *
  * @code
- * ToolInvocation.startServiceByDesktopName("kcm_keyboard");
+ * ToolInvocation.startDetached("kcm_keyboard");
  * @endcode
  */
 class ToolInvocation: public QObject
